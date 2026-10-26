@@ -1,0 +1,284 @@
+/*
+  texte-en.js  -  all English typing texts
+
+  How to add something:
+  - word:     add it to the long string in "woerter", separated by a space.
+              3 to 15 letters.
+  - proverb:  new line in "sprichwoerter":   "Your proverb.",
+  - sentence: new line in "saetze":          "Your sentence.",
+  - quote:    new line in "zitate":
+              { text: "The quote.", autor: "Name" },
+              Only quotes where wording and author are certain.
+
+  Only use characters you can type on a normal keyboard:
+  straight quotes " and ', a plain hyphen -, no curly quotes, no long dashes,
+  no single-character ellipsis.
+
+  (The keys are German words because the rest of the code uses them too.)
+*/
+
+const TEXTE_EN = {
+
+  woerter: (
+    "house tree water window garden summer winter sky street bridge cloud rain sun moon " +
+    "star fire meadow mountain valley river lake ocean beach island forest flower leaf " +
+    "root apple pear cherry bread butter cheese milk cake soup table chair bed cabinet " +
+    "lamp mirror carpet stairs door key clock calendar letter book newspaper pencil paper " +
+    "ink desk computer keyboard screen telephone bicycle train ship airplane station " +
+    "harbor journey holiday suitcase map goal path alley market shop school teacher " +
+    "student lesson question answer thought idea dream secret truth freedom peace joy " +
+    "luck courage strength patience silence noise music song piano violin drum flute " +
+    "guitar stage theater cinema picture color brush drawing shadow light darkness " +
+    "morning noon evening night week month year hour minute second spring autumn weather " +
+    "wind storm thunder lightning fog snow ice frost heat cold warmth dog cat horse cow " +
+    "sheep goat pig chicken duck goose bird fish frog butterfly bee ant spider fox rabbit " +
+    "deer bear wolf eagle owl raven dove gull child mother father brother sister " +
+    "grandmother uncle aunt friend neighbor guest doctor baker tailor painter pilot " +
+    "captain farmer forester carpenter merchant artist poet explorer inventor adventure " +
+    "story fairytale riddle game dice chess ball team victory pause vacation party gift " +
+    "candle room kitchen cellar roof wall tower castle church village city country home " +
+    "world earth future past present beginning end middle edge corner circle square line " +
+    "point number sum bill price money coin pocket coat cap shoe glove scarf shirt " +
+    "trousers dress belt button needle thread wool silk leather glass stone sand clay " +
+    "iron copper silver gold wood bark twig branch trunk oak beech pine birch rose tulip " +
+    "lily wish hope worry doubt memory mind feeling humor smile laughter whisper " +
+    "conversation voice ear eye hand finger foot heart head shoulder back breath sleep " +
+    "hunger thirst meal breakfast supper spice salt pepper sugar honey nut almond grape " +
+    "lemon orange potato tomato cucumber onion carrot mushroom " +
+    "quick slow gentle loud friendly brave curious cozy wonderful strange sudden careful " +
+    "simple difficult alive happy tired awake clever dark bright quiet " +
+    "walk jump write read discover tell understand begin forget remember wander sing " +
+    "dance laugh cook bake build fly swim search find open close wait count greet"
+  ).split(" "),
+
+  sprichwoerter: [
+    "A bird in the hand is worth two in the bush.",
+    "A friend in need is a friend indeed.",
+    "A journey of a thousand miles begins with a single step.",
+    "A picture is worth a thousand words.",
+    "A rolling stone gathers no moss.",
+    "Absence makes the heart grow fonder.",
+    "Actions speak louder than words.",
+    "All that glitters is not gold.",
+    "All's well that ends well.",
+    "An apple a day keeps the doctor away.",
+    "Beauty is in the eye of the beholder.",
+    "Better late than never.",
+    "Birds of a feather flock together.",
+    "Blood is thicker than water.",
+    "Don't count your chickens before they hatch.",
+    "Don't put all your eggs in one basket.",
+    "Don't judge a book by its cover.",
+    "Easy come, easy go.",
+    "Every cloud has a silver lining.",
+    "Fortune favors the bold.",
+    "Great minds think alike.",
+    "Haste makes waste.",
+    "He who laughs last laughs best.",
+    "Honesty is the best policy.",
+    "It takes two to tango.",
+    "Practice makes perfect.",
+    "Look before you leap.",
+    "Many hands make light work.",
+    "Necessity is the mother of invention.",
+    "No pain, no gain.",
+    "Once bitten, twice shy.",
+    "One good turn deserves another.",
+    "Out of sight, out of mind.",
+    "Rome wasn't built in a day.",
+    "Slow and steady wins the race.",
+    "The early bird catches the worm.",
+    "The pen is mightier than the sword.",
+    "There's no place like home.",
+    "Time and tide wait for no man.",
+    "Too many cooks spoil the broth.",
+    "Two heads are better than one.",
+    "When in Rome, do as the Romans do.",
+    "You can't have your cake and eat it too.",
+    "You reap what you sow.",
+    "Where there's a will, there's a way.",
+    "The grass is always greener on the other side.",
+    "Curiosity killed the cat.",
+    "Better safe than sorry.",
+    "Laughter is the best medicine.",
+    "Knowledge is power.",
+    "Patience is a virtue.",
+    "Misery loves company.",
+    "Least said, soonest mended.",
+    "Love is blind.",
+    "Make hay while the sun shines.",
+    "Money doesn't grow on trees.",
+    "No news is good news.",
+    "Old habits die hard.",
+    "Penny wise, pound foolish.",
+    "Still waters run deep.",
+    "The apple doesn't fall far from the tree.",
+    "The best things in life are free.",
+    "The proof of the pudding is in the eating.",
+    "The squeaky wheel gets the grease.",
+    "There's no smoke without fire.",
+    "Time heals all wounds.",
+    "Variety is the spice of life.",
+    "Waste not, want not.",
+    "What goes around comes around.",
+    "You can't teach an old dog new tricks.",
+    "A stitch in time saves nine.",
+    "A watched pot never boils.",
+    "Beggars can't be choosers.",
+    "Cut your coat according to your cloth.",
+    "Don't bite the hand that feeds you.",
+    "Every dog has its day.",
+    "First come, first served.",
+    "Give credit where credit is due.",
+    "Good things come to those who wait.",
+    "He who hesitates is lost.",
+    "History repeats itself.",
+    "Home is where the heart is.",
+    "It's always darkest before the dawn.",
+    "It never rains but it pours.",
+    "Let sleeping dogs lie.",
+    "Live and let live.",
+    "Lightning never strikes twice in the same place.",
+    "Nothing ventured, nothing gained.",
+    "One man's trash is another man's treasure.",
+    "People who live in glass houses shouldn't throw stones.",
+    "Seeing is believing.",
+    "The more, the merrier.",
+    "Think before you speak.",
+    "Walk before you run.",
+    "Well begun is half done.",
+    "What can't be cured must be endured.",
+    "You can lead a horse to water, but you can't make it drink.",
+    "Strike while the iron is hot.",
+    "Silence is golden.",
+    "Appearances can be deceiving.",
+    "Ignorance is bliss.",
+    "Don't cry over spilt milk."
+  ],
+
+  // Only long-dead authors and wording I am sure about.
+  zitate: [
+    { text: "To be, or not to be, that is the question.", autor: "Shakespeare" },
+    { text: "All the world's a stage, and all the men and women merely players.", autor: "Shakespeare" },
+    { text: "The course of true love never did run smooth.", autor: "Shakespeare" },
+    { text: "We are such stuff as dreams are made on.", autor: "Shakespeare" },
+    { text: "Brevity is the soul of wit.", autor: "Shakespeare" },
+    { text: "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.", autor: "Jane Austen" },
+    { text: "There is no charm equal to tenderness of heart.", autor: "Jane Austen" },
+    { text: "Truth is stranger than Fiction, but it is because Fiction is obliged to stick to possibilities; Truth isn't.", autor: "Mark Twain" },
+    { text: "It was the best of times, it was the worst of times.", autor: "Charles Dickens" },
+    { text: "The mass of men lead lives of quiet desperation.", autor: "Henry David Thoreau" },
+    { text: "Rather than love, than money, than fame, give me truth.", autor: "Henry David Thoreau" },
+    { text: "To be great is to be misunderstood.", autor: "Ralph Waldo Emerson" },
+    { text: "Nothing great was ever achieved without enthusiasm.", autor: "Ralph Waldo Emerson" },
+    { text: "Government of the people, by the people, for the people, shall not perish from the earth.", autor: "Abraham Lincoln" },
+    { text: "Well done is better than well said.", autor: "Benjamin Franklin" },
+    { text: "Lost time is never found again.", autor: "Benjamin Franklin" },
+    { text: "Early to bed and early to rise, makes a man healthy, wealthy and wise.", autor: "Benjamin Franklin" },
+    { text: "I can resist everything except temptation.", autor: "Oscar Wilde" },
+    { text: "We are all in the gutter, but some of us are looking at the stars.", autor: "Oscar Wilde" },
+    { text: "Experience is the name every one gives to their mistakes.", autor: "Oscar Wilde" },
+    { text: "A thing of beauty is a joy for ever.", autor: "John Keats" },
+    { text: "Beauty is truth, truth beauty.", autor: "John Keats" },
+    { text: "To err is human, to forgive divine.", autor: "Alexander Pope" },
+    { text: "A little learning is a dangerous thing.", autor: "Alexander Pope" },
+    { text: "Hope springs eternal in the human breast.", autor: "Alexander Pope" },
+    { text: "Reading maketh a full man; conference a ready man; and writing an exact man.", autor: "Francis Bacon" },
+    { text: "When a man is tired of London, he is tired of life.", autor: "Samuel Johnson" },
+    { text: "The best laid schemes o' mice an' men gang aft agley.", autor: "Robert Burns" },
+    { text: "To see a world in a grain of sand, and a heaven in a wild flower.", autor: "William Blake" },
+    { text: "I wandered lonely as a cloud.", autor: "William Wordsworth" },
+    { text: "'Tis better to have loved and lost than never to have loved at all.", autor: "Alfred Tennyson" },
+    { text: "To strive, to seek, to find, and not to yield.", autor: "Alfred Tennyson" },
+    { text: "All that we see or seem is but a dream within a dream.", autor: "Edgar Allan Poe" },
+    { text: "Curiouser and curiouser!", autor: "Lewis Carroll" },
+    { text: "Call me Ishmael.", autor: "Herman Melville" },
+    { text: "Hope is the thing with feathers that perches in the soul.", autor: "Emily Dickinson" },
+    { text: "Water, water, every where, nor any drop to drink.", autor: "Samuel Taylor Coleridge" },
+    { text: "If music be the food of love, play on.", autor: "Shakespeare" }
+  ],
+
+  saetze: [
+    "The quick brown fox jumps over the lazy dog.",
+    "The sun is shining, and the sky is clear today.",
+    "My cat likes to sleep on the warm window sill.",
+    "In autumn the colorful leaves fall from the trees.",
+    "Could you please pass me the salt?",
+    "We are taking the train to London tomorrow.",
+    "The bread smells fresh and crunchy.",
+    "A small bird sits on the branch and sings.",
+    "I like to read an exciting book in the evening.",
+    "The children play in the garden and laugh loudly.",
+    "Pack my box with five dozen liquor jugs.",
+    "How vexingly quick daft zebras jump!",
+    "The baker bakes the first rolls at four every morning.",
+    "In summer we swim in the lake behind the forest.",
+    "If you practice every day, you get faster over time.",
+    "The students are writing a short test today.",
+    "There is fresh fruit and vegetables at the market.",
+    "The rain taps quietly against the window.",
+    "My grandfather likes to tell us old stories.",
+    "Without my glasses I can't read the small print.",
+    "The road is wet, so please drive carefully.",
+    "Yesterday we went for a long walk by the river.",
+    "The concert starts at eight o'clock sharp.",
+    "Have you had breakfast, or are you still hungry?",
+    "In winter there is often snow on the roofs of the city.",
+    "A cup of hot tea warms cold hands.",
+    "The train to Boston is ten minutes late.",
+    "Our neighbor takes care of his garden with great love.",
+    "The stars shine brightly over the quiet lake.",
+    "I left my keys on the kitchen table.",
+    "The weather is changing: sometimes sun, sometimes rain.",
+    "She solves every puzzle faster than anyone else.",
+    "With a little patience almost anything works.",
+    "The library closes earlier than usual today.",
+    "A few kids are playing football in the park.",
+    "He paints a colorful picture of a ship at sea.",
+    "My bike has a flat tire again.",
+    "On the weekend we visit my grandparents in the country.",
+    "The dog wags its tail and barks happily.",
+    "Tonight we are cooking a big pan of pasta.",
+    "The clock ticks softly in the dark hallway.",
+    "As soon as the sun was gone, it suddenly got cold.",
+    "A good plan saves a lot of time and trouble.",
+    "The lighthouse shows the ships the way through the night.",
+    "She opened the window and took a deep breath.",
+    "Roses, tulips, and lilies are blooming in the garden.",
+    "The child stares at the huge butterfly.",
+    "Where did my umbrella go?",
+    "I'm already looking forward to the holiday by the sea.",
+    "Let's meet at half past two in front of the station.",
+    "The teacher explains the task once more, calmly.",
+    "Busy bees collect nectar all day long.",
+    "My favorite meal is potato soup with fresh bread.",
+    "Sometimes silence is the wisest answer.",
+    "The bridge over the river was rebuilt last year.",
+    "He has played the piano for three years and keeps improving.",
+    "Every evening I write a few lines in my journal.",
+    "The hill was steep, but the view was beautiful.",
+    "Please close the door, there's a draft.",
+    "Ice melts in the sun faster than you think.",
+    "Today I learn something new, and tomorrow I practice it.",
+    "The cat chases a shadow across the room.",
+    "The forest smells of moss, earth, and rain.",
+    "If you read a lot, you learn a lot of words.",
+    "A cold wind blows over the empty fields.",
+    "The cook seasons the soup with salt, pepper, and herbs.",
+    "Everyone is waiting eagerly for the result.",
+    "My brother is building a small boat in the basement.",
+    "An old oak tree stands in front of the house.",
+    "I prefer my coffee without sugar.",
+    "The clouds drift slowly over the hills.",
+    "Yesterday I found a smooth stone in the river.",
+    "It's never too late to start something new.",
+    "Together we can finish this in an hour.",
+    "The moon hangs big and yellow above the roof.",
+    "Small steps also lead to the goal.",
+    "The guests sit at the table and chat cheerfully.",
+    "The sailboat glides calmly over the waves.",
+    "It's snowing outside, and a candle burns inside.",
+    "The mouse slips through a tiny hole in the wall.",
+    "It was a long day, but a good one."
+  ]
+};

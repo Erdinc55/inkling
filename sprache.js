@@ -1,0 +1,170 @@
+/*
+  sprache.js  -  alle Beschriftungen der Oberfläche
+
+  Warum eine eigene Datei?
+  So steht kein deutscher oder englischer Satz mitten im Code. Wer eine
+  dritte Sprache möchte (zum Beispiel Spanisch), kopiert den Block "en",
+  nennt ihn "es", übersetzt die Werte und legt eine texte-es.js an.
+  Der übrige Code muss dafür nicht geändert werden.
+
+  {name} in einem Text wird beim Anzeigen durch einen Wert ersetzt.
+*/
+
+const SPRACHEN = {
+
+  de: {
+    _name: "Deutsch",
+    titel: "Inkling, der Schreibmaschinen-Tipptest",
+    unterzeile: "Tippen, bis die Tinte trocknet.",
+    sprache: "Sprache",
+    belegung: "Tastatur",
+    satzzeichen: "Satzzeichen",
+    ton: "Ton",
+    an: "an",
+    aus: "aus",
+    modus: "Modus",
+    zeitlauf: "Zeitlauf",
+    ueberleben: "Überleben",
+    dauer: "Dauer",
+    sekundenKurz: "{n} s",
+    textart: "Text",
+    woerter: "Wörter",
+    sprichwoerter: "Sprichwörter",
+    zitate: "Zitate",
+    saetze: "Sätze",
+    gemischt: "Gemischt",
+    nurWoerter: "Überleben läuft nur mit Wörtern.",
+    neustart: "Neu starten",
+    bestenliste: "Bestenliste",
+    zeit: "Zeit",
+    netto: "Netto-WPM",
+    brutto: "Brutto-WPM",
+    genauigkeit: "Genauigkeit",
+    level: "Level",
+    tinte: "Tinte",
+    woerterGezaehlt: "Wörter",
+    startHinweis: "Einfach lostippen. Die Uhr startet mit dem ersten Anschlag.",
+    startHinweisUeberleben: "Einfach lostippen. Jedes richtige Wort füllt die Tinte nach, jeder Fehler kostet eine Sekunde.",
+    startHinweisHandy: "Tippe hier, um die Tastatur zu öffnen.",
+    tastenHinweis: "Tab = neu starten  ·  Esc = abbrechen  ·  Rücktaste löscht Fehler",
+    rangTitel: "Dein Rang",
+    rangKeiner: "Noch kein Rang. Schaffe einen Zeitlauf mit mindestens 90 % Genauigkeit.",
+    rangNaechster: "Noch {n} WPM bis {rang}",
+    rangGanzOben: "Ganz oben. Mehr Tinte gibt es nicht.",
+    rangNurComputer: "Ränge gibt es nur im Zeitlauf am Computer.",
+    ergebnis: "Ergebnis",
+    zeitUm: "Zeit ist um",
+    tinteLeer: "Die Tinte ist leer",
+    platz: "Platz {n} in der Bestenliste",
+    keinPlatz: "Nicht in den Top 10",
+    ersterLauf: "Dein erster Lauf in dieser Wertung.",
+    neuerBestwert: "Neuer Bestwert, {n} besser als vorher.",
+    unterBestwert: "{n} unter deinem Bestwert.",
+    gleichBestwert: "Genau dein Bestwert.",
+    zuUngenau: "Unter 90 % Genauigkeit zählt der Lauf nicht für den Rang.",
+    verlaufTitel: "Tempo über die Zeit",
+    sekunden: "Sekunden",
+    fehlerTasten: "Rot leuchten die Tasten, die du verfehlt hast. Je knalliger, desto öfter.",
+    keineFehler: "Keine einzige Taste verfehlt.",
+    getippteZitate: "Zitate in diesem Lauf",
+    nochmal: "Nochmal",
+    aufstieg: "Aufstieg!",
+    filterModus: "Modus",
+    filterGeraet: "Gerät",
+    filterSprache: "Sprache",
+    computer: "Computer",
+    handy: "Handy",
+    datum: "Datum",
+    leer: "Noch keine Einträge.",
+    schliessen: "Schließen",
+    speicherAus: "Dein Browser erlaubt kein Speichern. Bestenliste und Rang gehen beim Schließen verloren.",
+    zeitlaufMit: "Zeitlauf {n} s",
+    einfuegenVerboten: "Einfügen ist hier nicht erlaubt.",
+    nachsteZeile: "neue Zeile"
+  },
+
+  en: {
+    _name: "English",
+    titel: "Inkling, a typewriter typing test",
+    unterzeile: "Type until the ink runs dry.",
+    sprache: "Language",
+    belegung: "Keyboard",
+    satzzeichen: "Punctuation",
+    ton: "Sound",
+    an: "on",
+    aus: "off",
+    modus: "Mode",
+    zeitlauf: "Time trial",
+    ueberleben: "Survival",
+    dauer: "Length",
+    sekundenKurz: "{n} s",
+    textart: "Text",
+    woerter: "Words",
+    sprichwoerter: "Proverbs",
+    zitate: "Quotes",
+    saetze: "Sentences",
+    gemischt: "Mixed",
+    nurWoerter: "Survival only uses words.",
+    neustart: "Restart",
+    bestenliste: "Leaderboard",
+    zeit: "Time",
+    netto: "Net WPM",
+    brutto: "Gross WPM",
+    genauigkeit: "Accuracy",
+    level: "Level",
+    tinte: "Ink",
+    woerterGezaehlt: "Words",
+    startHinweis: "Just start typing. The clock starts with your first keystroke.",
+    startHinweisUeberleben: "Just start typing. Every correct word refills the ink, every mistake costs a second.",
+    startHinweisHandy: "Tap here to open the keyboard.",
+    tastenHinweis: "Tab = restart  ·  Esc = cancel  ·  Backspace removes mistakes",
+    rangTitel: "Your rank",
+    rangKeiner: "No rank yet. Finish a time trial with at least 90% accuracy.",
+    rangNaechster: "{n} WPM to {rang}",
+    rangGanzOben: "Top of the ladder. There is no more ink.",
+    rangNurComputer: "Ranks only count in time trials on a computer.",
+    ergebnis: "Result",
+    zeitUm: "Time's up",
+    tinteLeer: "Out of ink",
+    platz: "#{n} on the leaderboard",
+    keinPlatz: "Not in the top 10",
+    ersterLauf: "Your first run in this category.",
+    neuerBestwert: "New personal best, {n} better than before.",
+    unterBestwert: "{n} below your best.",
+    gleichBestwert: "Exactly your best.",
+    zuUngenau: "Below 90% accuracy the run doesn't count towards your rank.",
+    verlaufTitel: "Speed over time",
+    sekunden: "seconds",
+    fehlerTasten: "Keys you missed glow red. The brighter, the more often.",
+    keineFehler: "Not a single key missed.",
+    getippteZitate: "Quotes in this run",
+    nochmal: "Again",
+    aufstieg: "Rank up!",
+    filterModus: "Mode",
+    filterGeraet: "Device",
+    filterSprache: "Language",
+    computer: "Computer",
+    handy: "Phone",
+    datum: "Date",
+    leer: "No entries yet.",
+    schliessen: "Close",
+    speicherAus: "Your browser blocks storage. Leaderboard and rank will be lost when you close the page.",
+    zeitlaufMit: "Time trial {n} s",
+    einfuegenVerboten: "Pasting is not allowed here.",
+    nachsteZeile: "new line"
+  }
+};
+
+// Text holen und Platzhalter wie {n} ersetzen.
+// Fehlt ein Text, wird der Schlüssel angezeigt statt einer leeren Stelle,
+// damit man den Fehler sofort sieht.
+function uebersetze(sprache, schluessel, werte) {
+  const satz = (SPRACHEN[sprache] && SPRACHEN[sprache][schluessel]) ||
+               (SPRACHEN.en[schluessel]) || schluessel;
+  if (!werte) return satz;
+  return satz.replace(/\{(\w+)\}/g, (_, k) => (k in werte ? werte[k] : "{" + k + "}"));
+}
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { SPRACHEN, uebersetze };
+}

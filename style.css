@@ -1,0 +1,913 @@
+/*
+  style.css  -  das Aussehen von Inkling
+
+  Die Idee: eine helle Reiseschreibmaschine aus den Fünfzigern.
+  Mintgrüner Lack, schwarze runde Tasten mit Chromring, cremefarbenes
+  Papier, blauschwarze Tinte und ein rotes Farbband für Fehler.
+  Alle Farben stehen hier oben, damit man sie an einer Stelle ändern kann.
+*/
+
+:root {
+  --tisch: #ece5d6;
+  --tisch-dunkel: #d9cfbb;
+  --lack: #a6c8b4;
+  --lack-hell: #c7dfd0;
+  --lack-schatten: #7ea891;
+  --lack-tief: #557f69;
+  --papier: #fdfaf1;
+  --papier-schatten: #e6dcc6;
+  --tinte: #1c2740;
+  --bleistift: #a59e8d;
+  --rot: #c9372c;
+  --rot-hell: #ff4b3a;
+  --stahl-hell: #f4f6f7;
+  --stahl: #b9c0c6;
+  --stahl-dunkel: #6e767e;
+  --taste: #23262a;
+  --schrift: #2b2a27;
+  --schrift-leise: #6b675d;
+
+  --font-papier: "Courier Prime", "Courier New", monospace;
+  --font-stempel: "Special Elite", "Courier New", monospace;
+  --font-ui: "Karla", system-ui, sans-serif;
+
+  /* Wo auf dem Papier angeschlagen wird (von links). Am Computer in der
+     Mitte wie bei der echten Maschine, auf dem Handy weiter links, damit
+     man mehr vom kommenden Text sieht. */
+  --anschlag: 50%;
+  --schriftgroesse: 26px;
+  --zeilenhoehe: 1.75em;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--tisch);
+  /* Leichte Holz-/Leinenstruktur aus zwei Verläufen, ohne Bilddatei */
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgba(255, 255, 255, 0.7), transparent 60%),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.012) 0 2px, transparent 2px 5px);
+  color: var(--schrift);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.45;
+  padding: 0 16px 48px;
+  overflow-x: hidden;
+}
+
+button, select, input { font: inherit; color: inherit; }
+
+.notfall {
+  max-width: 600px;
+  margin: 40px auto;
+  font-family: var(--font-papier);
+}
+
+:focus-visible {
+  outline: 3px solid var(--tinte);
+  outline-offset: 2px;
+}
+
+/* ---------------- Kopf ---------------- */
+
+.kopf {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 22px 0 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px 24px;
+}
+
+.logo {
+  margin: 0;
+  font-family: var(--font-stempel);
+  font-weight: 400;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--tinte);
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Ein Tintenklecks vor dem Namen, aus zwei Kreisen und einem Tropfen */
+.logo-klecks {
+  width: 26px;
+  height: 26px;
+  border-radius: 54% 46% 58% 42% / 49% 58% 42% 51%;
+  background: var(--tinte);
+  position: relative;
+  transform: rotate(-12deg);
+}
+.logo-klecks::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: -7px;
+  bottom: -5px;
+  border-radius: 50%;
+  background: var(--tinte);
+}
+
+.unterzeile {
+  margin: 6px 0 0;
+  color: var(--schrift-leise);
+  font-family: var(--font-papier);
+  font-style: italic;
+}
+
+.einstellungen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: flex-end;
+}
+
+.schalter-gruppe[hidden] { display: none; }
+.schalter-gruppe {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gruppen-name {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--schrift-leise);
+}
+
+/* Segment-Schalter: sehen aus wie eine Reihe Metall-Tabulatoren */
+.schalter {
+  display: inline-flex;
+  background: linear-gradient(var(--stahl), var(--stahl-hell));
+  border-radius: 999px;
+  padding: 3px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+.schalter.umbruch { flex-wrap: wrap; border-radius: 22px; }
+
+.schalter button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--schrift-leise);
+  transition: background 0.15s, color 0.15s;
+}
+.schalter button:hover { color: var(--schrift); }
+.schalter button[aria-pressed="true"] {
+  background: var(--taste);
+  color: var(--papier);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.schalter button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Kippschalter für an/aus */
+.kipp {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px 0 6px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(var(--stahl), var(--stahl-hell));
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+.kipp-hebel {
+  width: 40px;
+  height: 24px;
+  border-radius: 999px;
+  background: #8d949a;
+  position: relative;
+  transition: background 0.2s;
+}
+.kipp-hebel::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--stahl) 70%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s;
+}
+.kipp[aria-pressed="true"] .kipp-hebel { background: var(--lack-tief); }
+.kipp[aria-pressed="true"] .kipp-hebel::after { transform: translateX(16px); }
+.kipp-text { min-width: 2.2em; text-align: left; }
+
+/* ---------------- Rang-Leiste ---------------- */
+
+.rang-leiste {
+  max-width: 1000px;
+  margin: 8px auto 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px 10px 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.rang-text { flex: 1; min-width: 0; }
+.rang-titel { margin: 0 0 6px; font-size: 15px; }
+.rang-titel strong { font-family: var(--font-stempel); font-weight: 400; font-size: 18px; color: var(--tinte); }
+.rang-info { margin: 6px 0 0; font-size: 13px; color: var(--schrift-leise); }
+
+.fortschritt {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--tisch-dunkel);
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+.fortschritt span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(-45deg, var(--tinte) 0 6px, #2c3a5c 6px 12px);
+  transition: width 0.8s cubic-bezier(.2,.8,.2,1);
+}
+
+/* ---------------- Stempel (Ränge) ---------------- */
+
+.stempel {
+  --rang-farbe: #5b6168;
+  width: 92px;
+  height: 92px;
+  flex: none;
+  border-radius: 50%;
+  border: 3px solid var(--rang-farbe);
+  box-shadow: inset 0 0 0 4px transparent, inset 0 0 0 6px var(--rang-farbe);
+  color: var(--rang-farbe);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  text-align: center;
+  font-family: var(--font-stempel);
+  transform: rotate(-9deg);
+  /* Stempelfarbe ist nie ganz gleichmäßig: leichte Unregelmäßigkeit per Maske */
+  -webkit-mask-image: radial-gradient(circle at 30% 70%, rgba(0,0,0,0.75), #000 40%), radial-gradient(circle at 80% 20%, rgba(0,0,0,0.85), #000 50%);
+  mask-image: radial-gradient(circle at 30% 70%, rgba(0,0,0,0.75), #000 40%), radial-gradient(circle at 80% 20%, rgba(0,0,0,0.85), #000 50%);
+  mix-blend-mode: multiply;
+  user-select: none;
+}
+.stempel .s-nummer { font-size: 13px; letter-spacing: 0.2em; line-height: 1; }
+.stempel .s-name { font-size: 17px; line-height: 1.1; text-transform: uppercase; letter-spacing: 0.04em; }
+.stempel .s-fuss { font-size: 9px; letter-spacing: 0.25em; line-height: 1; margin-top: 2px; }
+.stempel.klein { width: 66px; height: 66px; }
+.stempel.klein .s-name { font-size: 12px; }
+.stempel.klein .s-nummer { font-size: 10px; }
+.stempel.klein .s-fuss { display: none; }
+.stempel.gross { width: 150px; height: 150px; border-width: 4px; box-shadow: inset 0 0 0 6px transparent, inset 0 0 0 9px var(--rang-farbe); }
+.stempel.gross .s-name { font-size: 26px; }
+.stempel.gross .s-nummer { font-size: 18px; }
+.stempel.gross .s-fuss { font-size: 11px; }
+.stempel.leer { --rang-farbe: #b8b1a1; border-style: dashed; box-shadow: none; }
+
+.rang-0 { --rang-farbe: #5b6168; }   /* Iron */
+.rang-1 { --rang-farbe: #a3602b; }   /* Bronze */
+.rang-2 { --rang-farbe: #7d8a94; }   /* Silver */
+.rang-3 { --rang-farbe: #b08617; }   /* Gold */
+.rang-4 { --rang-farbe: #2f8a83; }   /* Platinum */
+.rang-5 { --rang-farbe: #3563b0; }   /* Diamond */
+.rang-6 { --rang-farbe: #c9372c; }   /* Inkmaster */
+
+/* ---------------- Steuerung ---------------- */
+
+.steuerung {
+  max-width: 1000px;
+  margin: 14px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 18px;
+}
+
+.aktionen { display: flex; gap: 8px; margin-left: auto; }
+
+.knopf {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: var(--papier);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.knopf:hover { background: #fff; }
+.knopf.voll { background: var(--tinte); color: var(--papier); border-color: var(--tinte); }
+.knopf.voll kbd { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.35); color: var(--papier); }
+
+kbd {
+  font-family: var(--font-papier);
+  font-size: 12px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: var(--tisch);
+}
+
+/* Während des Tippens tritt die Steuerung zurück */
+body.laeuft .steuerung,
+body.laeuft .einstellungen,
+body.laeuft .rang-leiste { opacity: 0.35; transition: opacity 0.3s; }
+body.laeuft .steuerung:hover,
+body.laeuft .einstellungen:hover { opacity: 1; }
+
+/* ---------------- Die Maschine ---------------- */
+
+.maschine {
+  max-width: 1000px;
+  margin: 22px auto 0;
+  position: relative;
+  padding: 18px 26px 26px;
+  border-radius: 34px 34px 48px 48px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 30%),
+    linear-gradient(180deg, var(--lack-hell), var(--lack) 35%, var(--lack-schatten));
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -6px 12px rgba(0, 0, 0, 0.12),
+    0 26px 40px -18px rgba(60, 50, 30, 0.45),
+    0 4px 0 var(--lack-tief);
+}
+
+/* Zählwerk */
+.zaehlwerk {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.zaehler {
+  min-width: 112px;
+  padding: 6px 14px 7px;
+  border-radius: 12px;
+  background: linear-gradient(#2a2d31, #1b1d20);
+  box-shadow: inset 0 0 0 2px var(--stahl-dunkel), inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255,255,255,0.5);
+  color: var(--papier);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.zaehler[hidden] { display: none; }
+.zaehler-wert {
+  font-family: var(--font-papier);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.zaehler-name {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c9cfc9;
+}
+.zaehler-name b { color: var(--papier); }
+
+/* Tintenfass für Überleben: ein Balken, der leer läuft */
+.tinten-zaehler { min-width: 240px; justify-content: center; gap: 6px; }
+.tintenfass {
+  width: 100%;
+  height: 16px;
+  margin-top: 6px;
+  border-radius: 999px;
+  background: #0f1012;
+  box-shadow: inset 0 0 0 1px var(--stahl-dunkel);
+  overflow: hidden;
+}
+.tintenfass span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, #3a5fa8, #6b8fd6);
+  border-radius: inherit;
+}
+.tintenfass.knapp span { background: linear-gradient(90deg, var(--rot), var(--rot-hell)); }
+
+/* Papierbereich: oben schaut der Bogen heraus, unten liegt die Walze */
+.papier-bereich { position: relative; }
+
+.papier-fenster {
+  position: relative;
+  height: calc(var(--schriftgroesse) * 1.75 * 4.6);
+  overflow: hidden;
+  font-family: var(--font-papier);
+  font-size: var(--schriftgroesse);
+  /* Der Bogen verblasst nach oben, als liefe er hinter die Papierstütze */
+  -webkit-mask-image: linear-gradient(transparent, #000 38%);
+  mask-image: linear-gradient(transparent, #000 38%);
+  cursor: text;
+}
+
+/* Der Bogen fährt: --spalte schiebt ihn nach links.
+   1ch ist genau die Breite eines Zeichens, weil die Schrift gleich breite
+   Zeichen hat. So steht das nächste Zeichen immer an der Anschlagstelle. */
+.bogen {
+  --spalte: 0;
+  --rand: 4ch;
+  position: absolute;
+  left: var(--anschlag);
+  /* Unten verschwindet der Bogen hinter der Walze. Neue Zeilen kommen
+     unten dazu und schieben die alten nach oben, wie beim Zeilenvorschub. */
+  bottom: -3em;
+  min-width: 46ch;
+  /* Der Bogen reicht immer bis über den oberen Rand: ein ganzes Blatt */
+  min-height: calc(100% + 3em);
+  padding: 0.4em var(--rand) 3.35em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: var(--papier);
+  background-image: linear-gradient(90deg, transparent calc(var(--rand) - 1.4ch), rgba(201, 55, 44, 0.16) calc(var(--rand) - 1.4ch) calc(var(--rand) - 1.4ch + 1px), transparent 0);
+  box-shadow: 0 0 0 1px var(--papier-schatten), 0 8px 18px rgba(0, 0, 0, 0.12);
+  line-height: var(--zeilenhoehe);
+  white-space: pre;
+  color: var(--tinte);
+  transform: translateX(calc(-1ch * var(--spalte) - var(--rand) - 0.5ch));
+  transition: transform 70ms ease-out;
+  will-change: transform;
+}
+/* Wagenrücklauf: langsamer zurück nach rechts */
+.bogen.ruecklauf { transition: transform 320ms cubic-bezier(.3,.7,.2,1); }
+
+.zeile { height: var(--zeilenhoehe); }
+
+.zeichen { position: relative; }
+.zeichen.offen { color: var(--bleistift); }
+.zeichen.gedruckt {
+  color: var(--tinte);
+  /* Tinte ist nie ganz scharf */
+  text-shadow: 0 0 0.6px rgba(28, 39, 64, 0.65);
+}
+.zeichen.falsch {
+  color: var(--rot);
+  text-shadow: 0 0 0.6px rgba(201, 55, 44, 0.6);
+}
+.zeichen.falsch.leer::before {
+  content: "";
+  position: absolute;
+  left: 0.15ch;
+  right: 0.15ch;
+  bottom: 0.45em;
+  height: 2px;
+  background: var(--rot);
+}
+.zeichen.jetzt::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.32em;
+  height: 2px;
+  background: var(--rot);
+  animation: blinken 1s steps(2, start) infinite;
+}
+@keyframes blinken { to { visibility: hidden; } }
+
+.autor {
+  color: var(--bleistift);
+  font-style: italic;
+  font-size: 0.7em;
+  margin-left: 1.5ch;
+}
+.zeile.fertig .autor { color: #8d8676; }
+
+/* Anschlagmarke: kleine Chromführung, wo der Hebel trifft */
+.anschlag-marke {
+  position: absolute;
+  left: var(--anschlag);
+  bottom: 0;
+  width: 2.2ch;
+  height: 0.55em;
+  transform: translateX(-50%);
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(var(--stahl-hell), var(--stahl));
+  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+.anschlag-marke::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: var(--rot);
+  border-top: 0;
+}
+
+/* Verstecktes Eingabefeld: liegt unsichtbar über dem Papier.
+   16px Schrift, sonst zoomt das iPhone beim Antippen hinein. */
+.eingabe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  font-size: 16px;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  pointer-events: none;
+}
+body.handy .eingabe { pointer-events: auto; }
+
+/* Walze: schwarzer Gummizylinder mit Chromknöpfen */
+.walze {
+  position: relative;
+  height: 26px;
+  margin: 0 -8px;
+  border-radius: 13px;
+  background: linear-gradient(#4a4d52, #15171a 45%, #2a2d31 80%, #0c0d0f);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+.walzen-knopf {
+  position: absolute;
+  top: -7px;
+  width: 22px;
+  height: 40px;
+  border-radius: 9px;
+  background: linear-gradient(90deg, var(--stahl-dunkel), var(--stahl-hell) 45%, var(--stahl) 70%, var(--stahl-dunkel));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+.walzen-knopf.links { left: -16px; }
+.walzen-knopf.rechts { right: -16px; }
+
+.start-hinweis {
+  margin: -4px 0 8px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--lack-tief);
+  font-weight: 600;
+  min-height: 1.45em;
+  transition: opacity 0.3s;
+}
+body.laeuft .start-hinweis { opacity: 0; }
+body.ergebnis-offen .start-hinweis { display: none; }
+
+/* Typenkorb: liegt unter der Walze, die Hebel schlagen nach oben durch */
+.korb {
+  position: relative;
+  height: 76px;
+  margin-top: -2px;
+  pointer-events: none;
+  z-index: 3;
+}
+/* Das SVG ragt nach oben über die Walze, damit die Hebelspitze genau
+   die Zeile auf dem Papier trifft. */
+.korb-svg {
+  position: absolute;
+  left: 50%;
+  top: -53px;
+  width: 420px;
+  height: auto;
+  transform: translateX(-50%);
+  overflow: visible;
+}
+.korb-schale { fill: rgba(18, 28, 23, 0.38); }
+.hebel {
+  stroke: #d3d9dd;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transform: scaleX(0.2);
+}
+
+/* Tastatur */
+.tasten {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 12px 16px;
+  margin-top: 6px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.02));
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+.tasten-reihe { display: flex; gap: 8px; }
+.reihe-1 { margin-left: 22px; }
+.reihe-2 { margin-left: 44px; }
+.reihe-3 { margin-left: 10px; }
+
+.taste {
+  --groesse: 50px;
+  --hitze: 0;
+  width: var(--groesse);
+  height: var(--groesse);
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  position: relative;
+  color: var(--papier);
+  font-family: var(--font-papier);
+  font-weight: 700;
+  /* Zwei Hintergründe: innen die schwarze Kappe, außen der Chromring */
+  background:
+    radial-gradient(circle at 50% 42%, #3a3e44 0, var(--taste) 58%, #111 66%, transparent 67%),
+    conic-gradient(from 200deg, var(--stahl-hell), var(--stahl-dunkel), var(--stahl-hell), var(--stahl), var(--stahl-hell));
+  box-shadow: 0 4px 0 rgba(30, 40, 35, 0.45), 0 6px 8px rgba(0, 0, 0, 0.25);
+  user-select: none;
+}
+.taste-haupt { font-size: 19px; line-height: 1; }
+.taste-oben { font-size: 11px; line-height: 1; opacity: 0.75; }
+.taste-unten { font-size: 16px; line-height: 1.05; }
+.taste.breit { width: 74px; border-radius: 25px; background:
+    linear-gradient(#3a3e44, var(--taste) 70%),
+    var(--taste);
+  box-shadow: inset 0 0 0 3px var(--stahl), 0 4px 0 rgba(30, 40, 35, 0.45), 0 6px 8px rgba(0, 0, 0, 0.25);
+}
+.taste.leertaste {
+  width: 400px;
+  height: 34px;
+  border-radius: 17px;
+  background: linear-gradient(#3a3e44, var(--taste) 70%);
+  box-shadow: inset 0 0 0 3px var(--stahl), 0 4px 0 rgba(30, 40, 35, 0.45), 0 6px 8px rgba(0, 0, 0, 0.25);
+}
+.reihe-leer { margin-top: 2px; }
+
+/* Die nächste Taste: ein heller Ring, wie frisch geputzt */
+.taste.dran {
+  box-shadow: 0 0 0 3px var(--papier), 0 0 0 6px var(--tinte), 0 4px 0 rgba(30, 40, 35, 0.45), 0 8px 14px rgba(0, 0, 0, 0.3);
+}
+.taste.breit.dran, .taste.leertaste.dran {
+  box-shadow: inset 0 0 0 3px var(--stahl), 0 0 0 3px var(--papier), 0 0 0 6px var(--tinte), 0 4px 0 rgba(30, 40, 35, 0.45);
+}
+.taste.ruecktaste.dran { box-shadow: inset 0 0 0 3px var(--stahl), 0 0 0 3px var(--papier), 0 0 0 6px var(--rot); }
+
+/* Fehlertasten nach dem Lauf: je mehr Fehler, desto knalliger.
+   --hitze geht von 0 bis 1 und mischt Rot in die schwarze Kappe. */
+.taste.heiss {
+  background:
+    radial-gradient(circle at 50% 42%,
+      color-mix(in srgb, var(--rot-hell) calc(var(--hitze) * 100%), #6b2420) 0,
+      color-mix(in srgb, var(--rot) calc(var(--hitze) * 100%), #3a1714) 58%,
+      #111 66%, transparent 67%),
+    conic-gradient(from 200deg, var(--stahl-hell), var(--stahl-dunkel), var(--stahl-hell), var(--stahl), var(--stahl-hell));
+  box-shadow:
+    0 0 calc(6px + var(--hitze) * 22px) calc(var(--hitze) * 6px) rgba(255, 75, 58, calc(0.25 + var(--hitze) * 0.55)),
+    0 4px 0 rgba(30, 40, 35, 0.45);
+}
+
+.tasten-hinweis {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--lack-tief);
+}
+
+/* ---------------- Ergebnis ---------------- */
+
+.ergebnis[hidden] { display: none; }
+.ergebnis {
+  position: relative;
+  margin: 0 auto 18px;
+  max-width: 820px;
+  padding: 26px 30px 24px;
+  background: var(--papier);
+  color: var(--tinte);
+  box-shadow: 0 0 0 1px var(--papier-schatten), 0 18px 30px -12px rgba(0, 0, 0, 0.35);
+  font-family: var(--font-papier);
+  animation: herausziehen 0.45s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes herausziehen {
+  from { transform: translateY(40px); opacity: 0; clip-path: inset(100% 0 0 0); }
+  to { transform: none; opacity: 1; clip-path: inset(0 0 0 0); }
+}
+body.ergebnis-offen .papier-bereich,
+body.ergebnis-offen .korb { display: none; }
+
+.e-kopf {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  border-bottom: 1px dashed var(--bleistift);
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+.e-titel { margin: 0; font-family: var(--font-stempel); font-weight: 400; font-size: 28px; }
+.e-grund { margin: 2px 0 0; color: var(--schrift-leise); font-size: 15px; }
+
+.e-kopf > div:first-child { flex: 1; min-width: 0; }
+.e-zahlen {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: 10px 40px;
+  margin: 18px 0 0;
+}
+.e-zahl { margin: 0; }
+.e-zahl dt { font-family: var(--font-ui); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--schrift-leise); }
+.e-zahl dd { margin: 0; font-size: 40px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.e-zahl.haupt dd { font-size: 56px; }
+
+.e-zeilen { margin: 0 0 4px; font-size: 16px; line-height: 1.6; }
+.e-zeilen .gut { color: #2f7a4f; }
+.e-zeilen .schlecht { color: var(--rot); }
+
+.e-diagramm { margin: 18px 0 6px; }
+.e-diagramm h3, .e-zitate h3 { margin: 0 0 6px; font-family: var(--font-ui); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--schrift-leise); }
+.e-diagramm svg { width: 100%; height: auto; display: block; overflow: visible; }
+.d-gitter { stroke: var(--papier-schatten); stroke-width: 1; }
+.d-achse { font-family: var(--font-papier); font-size: 11px; fill: var(--schrift-leise); }
+.d-linie { fill: none; stroke: var(--tinte); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.d-flaeche { fill: rgba(28, 39, 64, 0.08); }
+.d-fehler { stroke: var(--rot); stroke-width: 2; }
+
+.e-tasten-text { font-size: 14px; color: var(--schrift-leise); margin: 10px 0 0; font-family: var(--font-ui); }
+
+.e-zitate { margin-top: 14px; }
+.e-zitate ul { margin: 0; padding: 0; list-style: none; font-size: 15px; }
+.e-zitate li { margin: 4px 0; }
+.e-zitate em { color: var(--schrift-leise); }
+
+.e-aktionen { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; font-family: var(--font-ui); }
+
+.e-stempel-platz { flex: none; }
+
+/* Stempel-Animation beim Aufstieg: die Maschine drückt das Zeichen aufs Papier */
+.stempel.aufprall {
+  animation: aufprall 0.7s cubic-bezier(.3,1.6,.5,1) both;
+}
+@keyframes aufprall {
+  0% { transform: scale(2.6) rotate(8deg); opacity: 0; }
+  55% { transform: scale(0.94) rotate(-10deg); opacity: 1; }
+  75% { transform: scale(1.04) rotate(-9deg); }
+  100% { transform: scale(1) rotate(-9deg); opacity: 1; }
+}
+.aufstieg-text {
+  font-family: var(--font-stempel);
+  color: var(--rot);
+  font-size: 20px;
+  text-align: center;
+  margin: 6px 0 0;
+  animation: herausziehen 0.5s 0.5s both;
+}
+
+/* ---------------- Bestenliste ---------------- */
+
+.liste {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  padding: 22px 24px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--papier);
+  color: var(--tinte);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5);
+}
+.liste::backdrop { background: rgba(40, 35, 25, 0.45); }
+.liste-kopf { display: flex; justify-content: space-between; align-items: center; }
+.liste h2 { margin: 0; font-family: var(--font-stempel); font-weight: 400; font-size: 28px; }
+.knopf-schliessen {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--tisch);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+.filter { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.filter label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--schrift-leise); flex: 1 1 140px; }
+.filter select {
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: #fff;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+  color: var(--schrift);
+}
+.tabelle { width: 100%; border-collapse: collapse; font-family: var(--font-papier); font-size: 16px; }
+.tabelle th { text-align: left; font-family: var(--font-ui); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--schrift-leise); padding: 6px 6px; border-bottom: 1px solid var(--papier-schatten); }
+.tabelle td { padding: 8px 6px; border-bottom: 1px dashed var(--papier-schatten); font-variant-numeric: tabular-nums; }
+.tabelle td:first-child { font-weight: 700; width: 2.5em; }
+.tabelle tr.neu td { background: rgba(201, 55, 44, 0.08); }
+.leer-hinweis { color: var(--schrift-leise); font-style: italic; }
+
+/* ---------------- Meldung ---------------- */
+
+.meldung {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 20px);
+  max-width: calc(100vw - 32px);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--tinte);
+  color: var(--papier);
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 10;
+}
+.meldung.zeigen { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------------- Kleinere Bildschirme ---------------- */
+
+@media (max-width: 860px) {
+  .taste { --groesse: 42px; }
+  .taste-haupt { font-size: 16px; }
+  .taste.breit { width: 60px; border-radius: 21px; }
+  .taste.leertaste { width: 300px; }
+  .tasten-reihe { gap: 6px; }
+  .korb-svg { width: 360px; }
+}
+
+/* Handy: keine gezeichnete Tastatur, die Bildschirmtastatur ist die Eingabe */
+body.handy .korb,
+body.handy .tasten,
+body.handy .tasten-hinweis { display: none; }
+
+@media (max-width: 640px) {
+  :root { --schriftgroesse: 21px; --anschlag: 32%; }
+  body { padding: 0 16px 32px; }
+  .kopf { padding-top: 14px; }
+  .logo { font-size: 34px; }
+  .logo-klecks { width: 20px; height: 20px; }
+  .einstellungen { width: 100%; justify-content: space-between; }
+  .steuerung { gap: 10px 12px; }
+  .aktionen { margin-left: 0; width: 100%; }
+  .aktionen .knopf { flex: 1; justify-content: center; }
+  .aktionen kbd { display: none; }
+  .maschine { padding: 12px 12px 16px; border-radius: 22px 22px 30px 30px; margin-top: 16px; }
+  .zaehlwerk { gap: 6px; }
+  .zaehler { min-width: 0; flex: 1; padding: 5px 6px; }
+  .zaehler-wert { font-size: 21px; }
+  .zaehler-name { font-size: 10px; letter-spacing: 0.04em; }
+  .tinten-zaehler { flex: 2; }
+  .papier-fenster { height: calc(var(--schriftgroesse) * 1.75 * 3.2); }
+  .walzen-knopf { display: none; }
+  .walze { margin: 0; height: 18px; }
+  .ergebnis { padding: 20px 16px; }
+  .e-zahlen { grid-template-columns: repeat(3, 1fr); }
+  .e-zahl dd { font-size: 28px; }
+  .e-zahl.haupt dd { font-size: 38px; }
+  .stempel.gross { width: 108px; height: 108px; }
+  .stempel.gross .s-name { font-size: 18px; }
+  .stempel.gross .s-nummer { font-size: 13px; }
+  .e-kopf { flex-direction: column-reverse; align-items: stretch; }
+  .e-stempel-platz { align-self: center; }
+  .e-zahlen { gap: 10px 18px; }
+  .rang-leiste { gap: 12px; }
+}
+
+/* Wenn auf dem Handy die Tastatur offen ist und getippt wird: alles weg,
+   was Platz frisst, damit Zählwerk und Papier oben sichtbar bleiben. */
+body.handy.laeuft .kopf,
+body.handy.laeuft .rang-leiste,
+body.handy.laeuft .steuerung { display: none; }
+body.handy.laeuft .maschine { margin-top: 10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bogen, .bogen.ruecklauf { transition: none; }
+  .zeichen.jetzt::after { animation: none; }
+  .ergebnis, .stempel.aufprall, .aufstieg-text { animation: none; }
+  .fortschritt span { transition: none; }
+}

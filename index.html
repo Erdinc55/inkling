@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Inkling, a typewriter typing test</title>
+<meta name="description" content="A typing test on a drawn typewriter. Words, proverbs, quotes and sentences in English and German.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Karla:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%2323262a' stroke='%23b9c0c6' stroke-width='3'/%3E%3Ctext x='16' y='21.5' font-family='monospace' font-size='15' font-weight='700' fill='%23fdfaf1' text-anchor='middle'%3Ei%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- Wenn JavaScript fehlt oder abstürzt, steht hier wenigstens etwas. -->
+<noscript><p class="notfall">Inkling needs JavaScript. / Inkling braucht JavaScript.</p></noscript>
+
+<header class="kopf">
+  <div class="marke">
+    <h1 class="logo"><span class="logo-klecks" aria-hidden="true"></span>Inkling</h1>
+    <p class="unterzeile" data-t="unterzeile">Type until the ink runs dry.</p>
+  </div>
+
+  <div class="einstellungen">
+    <div class="schalter-gruppe" role="group" aria-labelledby="l-sprache">
+      <span class="gruppen-name" id="l-sprache" data-t="sprache">Language</span>
+      <div class="schalter">
+        <button type="button" data-sprache="en" aria-pressed="true">EN</button>
+        <button type="button" data-sprache="de" aria-pressed="false">DE</button>
+      </div>
+    </div>
+    <div class="schalter-gruppe" role="group" aria-labelledby="l-belegung">
+      <span class="gruppen-name" id="l-belegung" data-t="belegung">Keyboard</span>
+      <div class="schalter">
+        <button type="button" data-belegung="qwertz" aria-pressed="true">QWERTZ</button>
+        <button type="button" data-belegung="qwerty" aria-pressed="false">QWERTY</button>
+      </div>
+    </div>
+    <div class="schalter-gruppe">
+      <span class="gruppen-name" id="l-satz" data-t="satzzeichen">Punctuation</span>
+      <button type="button" class="kipp" id="satzzeichen" aria-pressed="true" aria-labelledby="l-satz">
+        <span class="kipp-hebel" aria-hidden="true"></span><span class="kipp-text">on</span>
+      </button>
+    </div>
+    <div class="schalter-gruppe">
+      <span class="gruppen-name" id="l-ton" data-t="ton">Sound</span>
+      <button type="button" class="kipp" id="ton" aria-pressed="false" aria-labelledby="l-ton">
+        <span class="kipp-hebel" aria-hidden="true"></span><span class="kipp-text">off</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Rang: Plakette und Fortschritt bis zum nächsten Rang -->
+<section class="rang-leiste" id="rang-leiste" aria-live="polite">
+  <div class="stempel klein" id="rang-stempel"></div>
+  <div class="rang-text">
+    <p class="rang-titel"><span data-t="rangTitel">Your rank</span>: <strong id="rang-name">-</strong></p>
+    <div class="fortschritt" aria-hidden="true"><span id="rang-balken"></span></div>
+    <p class="rang-info" id="rang-info"></p>
+  </div>
+</section>
+
+<!-- Modus, Dauer, Text -->
+<nav class="steuerung" aria-label="Settings">
+  <div class="schalter-gruppe" role="group" aria-labelledby="l-modus">
+    <span class="gruppen-name" id="l-modus" data-t="modus">Mode</span>
+    <div class="schalter">
+      <button type="button" data-modus="zeit" aria-pressed="true" data-t="zeitlauf">Time trial</button>
+      <button type="button" data-modus="ueberleben" aria-pressed="false" data-t="ueberleben">Survival</button>
+    </div>
+  </div>
+  <div class="schalter-gruppe" role="group" aria-labelledby="l-dauer" id="gruppe-dauer">
+    <span class="gruppen-name" id="l-dauer" data-t="dauer">Length</span>
+    <div class="schalter">
+      <button type="button" data-dauer="30" aria-pressed="false">30 s</button>
+      <button type="button" data-dauer="60" aria-pressed="true">60 s</button>
+      <button type="button" data-dauer="120" aria-pressed="false">120 s</button>
+    </div>
+  </div>
+  <div class="schalter-gruppe" role="group" aria-labelledby="l-art" id="gruppe-art">
+    <span class="gruppen-name" id="l-art" data-t="textart">Text</span>
+    <div class="schalter umbruch">
+      <button type="button" data-art="woerter" aria-pressed="true" data-t="woerter">Words</button>
+      <button type="button" data-art="sprichwoerter" aria-pressed="false" data-t="sprichwoerter">Proverbs</button>
+      <button type="button" data-art="zitate" aria-pressed="false" data-t="zitate">Quotes</button>
+      <button type="button" data-art="saetze" aria-pressed="false" data-t="saetze">Sentences</button>
+      <button type="button" data-art="gemischt" aria-pressed="false" data-t="gemischt">Mixed</button>
+    </div>
+  </div>
+  <div class="aktionen">
+    <button type="button" class="knopf" id="neustart"><span data-t="neustart">Restart</span> <kbd>Tab</kbd></button>
+    <button type="button" class="knopf" id="liste-oeffnen" data-t="bestenliste">Leaderboard</button>
+  </div>
+</nav>
+
+<main class="maschine" id="maschine">
+
+  <!-- Zählwerk: läuft während des Tippens mit -->
+  <div class="zaehlwerk">
+    <div class="zaehler" id="zaehler-zeit">
+      <span class="zaehler-wert" id="wert-zeit">60</span>
+      <span class="zaehler-name" data-t="zeit">Time</span>
+    </div>
+    <div class="zaehler tinten-zaehler" id="zaehler-tinte" hidden>
+      <div class="tintenfass" aria-hidden="true"><span id="tinten-stand"></span></div>
+      <span class="zaehler-name"><span data-t="level">Level</span> <b id="wert-level">1</b> · <span id="wert-woerter">0</span> <span data-t="woerterGezaehlt">Words</span></span>
+    </div>
+    <div class="zaehler">
+      <span class="zaehler-wert" id="wert-wpm">0</span>
+      <span class="zaehler-name" data-t="netto">Net WPM</span>
+    </div>
+    <div class="zaehler">
+      <span class="zaehler-wert" id="wert-gen">100</span>
+      <span class="zaehler-name" data-t="genauigkeit">Accuracy</span>
+    </div>
+  </div>
+
+  <p class="start-hinweis" id="start-hinweis"></p>
+
+  <!-- Das Papier. Der Bogen fährt nach links, wie der Wagen einer echten Maschine. -->
+  <div class="papier-bereich" id="papier-bereich">
+    <div class="papier-fenster" id="fenster">
+      <div class="bogen" id="bogen"></div>
+      <div class="anschlag-marke" aria-hidden="true"></div>
+      <!-- Verstecktes Eingabefeld: auf dem Handy öffnet es die Bildschirmtastatur -->
+      <input type="text" id="eingabe" class="eingabe"
+             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+             inputmode="text" enterkeyhint="next" aria-label="Typing field">
+    </div>
+    <div class="walze" aria-hidden="true">
+      <span class="walzen-knopf links"></span><span class="walzen-knopf rechts"></span>
+    </div>
+  </div>
+
+  <!-- Ergebnis: erscheint nach dem Lauf an der Stelle des Papiers -->
+  <section class="ergebnis" id="ergebnis" hidden aria-live="polite"></section>
+
+  <!-- Typenkorb und Tastatur (nur am Computer) -->
+  <div class="korb" id="korb"></div>
+  <div class="tasten" id="tasten"></div>
+  <p class="tasten-hinweis" data-t="tastenHinweis">Tab = restart · Esc = cancel · Backspace removes mistakes</p>
+
+</main>
+
+<!-- Bestenliste -->
+<dialog class="liste" id="liste">
+  <div class="liste-kopf">
+    <h2 data-t="bestenliste">Leaderboard</h2>
+    <button type="button" class="knopf-schliessen" id="liste-zu" data-t-label="schliessen" aria-label="Close">×</button>
+  </div>
+  <div class="filter">
+    <label><span data-t="filterModus">Mode</span>
+      <select id="filter-modus"></select></label>
+    <label><span data-t="filterGeraet">Device</span>
+      <select id="filter-geraet"></select></label>
+    <label><span data-t="filterSprache">Language</span>
+      <select id="filter-sprache"></select></label>
+  </div>
+  <div id="liste-inhalt"></div>
+</dialog>
+
+<!-- Kurze Meldungen, zum Beispiel "Einfügen ist nicht erlaubt" -->
+<div class="meldung" id="meldung" role="status" aria-live="polite"></div>
+
+<!-- Reihenfolge ist wichtig: erst die Bausteine, ganz zum Schluss app.js -->
+<script src="messung.js"></script>
+<script src="sprache.js"></script>
+<script src="texte-de.js"></script>
+<script src="texte-en.js"></script>
+<script src="ton.js"></script>
+<script src="tastatur.js"></script>
+<script src="spiel.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
