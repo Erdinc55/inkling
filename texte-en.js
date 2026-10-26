@@ -1,22 +1,3 @@
-/*
-  texte-en.js  -  all English typing texts
-
-  How to add something:
-  - word:     add it to the long string in "woerter", separated by a space.
-              3 to 15 letters.
-  - proverb:  new line in "sprichwoerter":   "Your proverb.",
-  - sentence: new line in "saetze":          "Your sentence.",
-  - quote:    new line in "zitate":
-              { text: "The quote.", autor: "Name" },
-              Only quotes where wording and author are certain.
-
-  Only use characters you can type on a normal keyboard:
-  straight quotes " and ', a plain hyphen -, no curly quotes, no long dashes,
-  no single-character ellipsis.
-
-  (The keys are German words because the rest of the code uses them too.)
-*/
-
 const TEXTE_EN = {
 
   woerter: (
@@ -156,7 +137,6 @@ const TEXTE_EN = {
     "Don't cry over spilt milk."
   ],
 
-  // Only long-dead authors and wording I am sure about.
   zitate: [
     { text: "To be, or not to be, that is the question.", autor: "Shakespeare" },
     { text: "All the world's a stage, and all the men and women merely players.", autor: "Shakespeare" },
