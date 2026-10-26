@@ -1,20 +1,3 @@
-/*
-  texte-de.js  -  alle deutschen Tipptexte
-
-  So fügst du etwas hinzu:
-  - Wort:        einfach in die lange Zeichenkette bei "woerter" schreiben,
-                 mit einem Leerzeichen getrennt. 3 bis 15 Buchstaben.
-  - Sprichwort:  neue Zeile in "sprichwoerter":   "Dein Sprichwort.",
-  - Satz:        neue Zeile in "saetze":          "Dein Satz.",
-  - Zitat:       neue Zeile in "zitate":
-                 { text: "Das Zitat.", autor: "Name" },
-                 Nur Zitate, bei denen Wortlaut und Autor sicher stimmen.
-
-  Bitte nur Zeichen, die man auf einer normalen Tastatur tippen kann:
-  gerade Anführungszeichen " und ', Bindestrich -, drei Punkte nicht als
-  ein Zeichen. Typografische Zeichen wie „ " – ... gehen nicht.
-*/
-
 const TEXTE_DE = {
 
   woerter: (
@@ -155,7 +138,6 @@ const TEXTE_DE = {
     "Wer nicht wagt, der nicht gewinnt."
   ],
 
-  // Nur Autoren, die lange tot sind, und nur gesicherter Wortlaut.
   zitate: [
     { text: "Es irrt der Mensch, solang er strebt.", autor: "Goethe" },
     { text: "Zwei Seelen wohnen, ach! in meiner Brust.", autor: "Goethe" },
