@@ -1,9 +1,6 @@
-// Test für spiel.js: Fehlerbehandlung, Zeitlauf und eine Simulation für Überleben.
-// Start: node test-spiel.js
 const fs = require("fs");
 const vm = require("vm");
 
-// Alles in einen gemeinsamen Kontext laden, so wie im Browser.
 const ctx = { console };
 vm.createContext(ctx);
 for (const d of ["messung.js", "texte-de.js", "texte-en.js", "spiel.js"]) {
@@ -18,15 +15,14 @@ function wahr(name, wert) {
   console.log((wert ? "ok    " : "FALSCH") + "  " + name);
 }
 
-// --- Grundlagen ---
 const l = new Lauf({ modus: "zeit", dauer: 30, art: "saetze", texte: TEXTE_DE });
 l.zeile = { text: "Ab c", autor: null };
 l.tippe("A", 0);
-l.tippe("x", 100);           // falsch
-l.tippe("y", 200);           // auch falsch, weil schon was Falsches dasteht
+l.tippe("x", 100);          
+l.tippe("y", 200);           
 wahr("zwei falsche Zeichen stehen da", l.falsch.length === 2);
 wahr("Fehler zählen beim erwarteten Zeichen 'b'", l.tastenFehler["b"] === 2);
-l.tippe("b", 250);           // trotz richtigem Zeichen: erst löschen!
+l.tippe("b", 250);          
 wahr("richtiges Zeichen hilft nicht, solange Fehler dastehen", l.pos === 1);
 l.loeschen(); l.loeschen(); l.loeschen();
 wahr("Rücktaste löscht nur Fehler, nicht Richtiges", l.falsch.length === 0 && l.pos === 1);
@@ -35,7 +31,6 @@ const r = l.tippe("c", 500);
 wahr("Zeilenende erkannt", r.zeilenEnde === true);
 wahr("Anschläge: 4 richtig von 7", l.richtige === 4 && l.alle === 7);
 
-// --- Uhr startet mit dem ersten Anschlag ---
 const z = new Lauf({ modus: "zeit", dauer: 30, art: "woerter", texte: TEXTE_EN });
 wahr("vor dem ersten Anschlag läuft nichts", z.restzeit(99999) === 30);
 z.tippe(z.erwartet(), 1000);
@@ -44,12 +39,10 @@ wahr("nach 30 s ist Schluss", z.beendet && z.grund === "zeit");
 wahr("gezählte Zeit genau 30 s", z.sekunden(50000) === 30);
 wahr("nach Ablauf wird nichts mehr gezählt", z.tippe("x", 31500).typ === "ignoriert");
 
-// --- Satzzeichen aus ---
 wahr("Satzzeichen weg: \"Don't cry, ok?\" -> \"Dont cry ok\"", ohneSatzzeichen("Don't cry, ok?") === "Dont cry ok");
 const s = new Lauf({ modus: "zeit", art: "saetze", texte: TEXTE_DE, satzzeichen: false });
 wahr("Zeile ohne Satzzeichen: " + s.zeile.text, !/[.,;:!?'"]/.test(s.zeile.text));
 
-// --- Gemischt: nur ganze Zeilen, Zitate mit Autor ---
 const g = new Lauf({ modus: "zeit", art: "gemischt", texte: TEXTE_DE });
 let alleZeilen = true;
 for (let i = 0; i < 50; i++) {
@@ -58,9 +51,6 @@ for (let i = 0; i < 50; i++) {
 }
 wahr("Gemischt liefert keine Einzelwörter", alleZeilen);
 
-// --- Überleben: einen Tipper simulieren ---
-// Er tippt gleichmäßig mit X WPM und macht alle 'fehlerAlle' Zeichen einen Fehler,
-// den er sofort mit der Rücktaste korrigiert (das kostet zwei Anschläge Zeit).
 function simuliere(wpm, fehlerAlle) {
   const lauf = new Lauf({ modus: "ueberleben", texte: TEXTE_EN, zufall: mulberry(7) });
   const proZeichen = 60000 / (wpm * 5);
