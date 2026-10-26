@@ -1,15 +1,3 @@
-/*
-  ton.js
-  ------
-  Alle Töne werden im Browser erzeugt (Web Audio API), es gibt keine
-  Audiodateien. Ein "Klack" ist zum Beispiel ein ganz kurzes Rauschen,
-  das durch einen Filter wie Metall auf Papier klingt.
-
-  Browser erlauben Ton erst nach einer Berührung oder einem Tastendruck.
-  Deshalb wird der AudioContext erst beim ersten Ton angelegt, und der
-  kommt immer aus einem Tastendruck.
-*/
-
 const Ton = {
   an: false,
   ctx: null,
@@ -22,7 +10,6 @@ const Ton = {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return null;
         this.ctx = new AC();
-        // Eine Sekunde weißes Rauschen vorbereiten, wird für jeden Klack wiederverwendet.
         const laenge = this.ctx.sampleRate;
         this.rauschen = this.ctx.createBuffer(1, laenge, this.ctx.sampleRate);
         const daten = this.rauschen.getChannelData(0);
@@ -31,11 +18,10 @@ const Ton = {
       if (this.ctx.state === "suspended") this.ctx.resume();
       return this.ctx;
     } catch (e) {
-      return null;  // Kein Ton ist besser als eine kaputte Seite.
+      return null;  
     }
   },
 
-  // Hüllkurve: schnell laut, dann abklingen. Ohne sie knackt es.
   huelle(ziel, start, spitze, dauer) {
     ziel.gain.setValueAtTime(0.0001, start);
     ziel.gain.exponentialRampToValueAtTime(spitze, start + 0.004);
@@ -48,7 +34,6 @@ const Ton = {
     const t = ctx.currentTime;
     const quelle = ctx.createBufferSource();
     quelle.buffer = this.rauschen;
-    // Zufälliger Startpunkt im Rauschen, damit nicht jeder Klack gleich klingt.
     const versatz = Math.random() * 0.8;
     const filter = ctx.createBiquadFilter();
     filter.type = "bandpass";
@@ -59,7 +44,6 @@ const Ton = {
     quelle.connect(filter).connect(laut).connect(ctx.destination);
     quelle.start(t, versatz, 0.06);
 
-    // Dazu ein tiefer, kurzer Schlag: der Hebel trifft auf die Walze.
     const tief = ctx.createOscillator();
     tief.type = "triangle";
     tief.frequency.setValueAtTime(180, t);
@@ -86,7 +70,6 @@ const Ton = {
     o.stop(t + 0.2);
   },
 
-  // Die Glocke am Zeilenende: zwei Teiltöne, die lang ausklingen.
   glocke() {
     const ctx = this.bereit();
     if (!ctx) return;
@@ -103,7 +86,6 @@ const Ton = {
     }
   },
 
-  // Dumpfer Stempel beim Rangaufstieg.
   stempel() {
     const ctx = this.bereit();
     if (!ctx) return;
