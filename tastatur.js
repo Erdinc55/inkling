@@ -1,18 +1,3 @@
-/*
-  tastatur.js
-  -----------
-  Die gezeichnete Schreibmaschine: runde Tasten mit Metallring und der
-  Typenkorb, aus dem bei jedem Anschlag ein Hebel aufs Papier schlägt.
-
-  Tasten werden über das ZEICHEN gefunden, nicht über den Tastencode.
-  Warum? Der Tastencode sagt nur, wo die Taste auf einer US-Tastatur
-  liegen würde. Auf einer deutschen Tastatur sitzt das Z aber woanders,
-  und Ä, Ö, Ü haben gar keinen eigenen US-Code. Das getippte Zeichen
-  dagegen stimmt immer.
-*/
-
-// Jede Taste: [normal, mit Umschalt]. Buchstaben stehen nur einmal drin,
-// der Großbuchstabe wird automatisch ergänzt.
 const BELEGUNGEN = {
   qwertz: [
     [["^", "°"], ["1", "!"], ["2", "\""], ["3", "§"], ["4", "$"], ["5", "%"], ["6", "&"],
@@ -30,21 +15,18 @@ const BELEGUNGEN = {
   ]
 };
 
-// Wie viele Hebel im Korb stecken. Echte Maschinen haben etwa 44,
-// 28 reichen fürs Auge und bleiben flüssig.
 const HEBEL_ANZAHL = 28;
 
 class Schreibmaschine {
   constructor(tastenFeld, korbFeld) {
     this.tastenFeld = tastenFeld;
     this.korbFeld = korbFeld;
-    this.zeichenZuTaste = new Map();   // "A" -> { el, shift: true, anteil }
+    this.zeichenZuTaste = new Map();  
     this.markiert = [];
     this.hebel = [];
     this.korbBauen();
   }
 
-  // Tasten neu zeichnen, zum Beispiel nach dem Wechsel QWERTZ <-> QWERTY.
   bauen(name) {
     const reihen = BELEGUNGEN[name] || BELEGUNGEN.qwertz;
     this.tastenFeld.innerHTML = "";
@@ -58,8 +40,6 @@ class Schreibmaschine {
         const [unten, oben] = Array.isArray(eintrag) ? eintrag : [eintrag, eintrag.toUpperCase()];
         const istBuchstabe = !Array.isArray(eintrag);
         const taste = this.taste(istBuchstabe ? oben : unten, istBuchstabe ? "" : oben);
-        // Wo liegt die Taste von links nach rechts? 0 bis 1.
-        // Daraus wird später der passende Typenhebel gewählt.
         const anteil = (s + r * 0.35) / (reihe.length - 1 + 3 * 0.35);
         this.zeichenZuTaste.set(unten, { el: taste, shift: false, anteil });
         if (oben !== unten) this.zeichenZuTaste.set(oben, { el: taste, shift: true, anteil });
@@ -97,8 +77,6 @@ class Schreibmaschine {
     return el;
   }
 
-  // Den Typenkorb als SVG bauen: ein Fächer aus Hebeln unter dem Papier.
-  // Alle Hebel zielen auf denselben Punkt, die Anschlagstelle oben in der Mitte.
   korbBauen() {
     const ns = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(ns, "svg");
@@ -106,7 +84,6 @@ class Schreibmaschine {
     svg.setAttribute("aria-hidden", "true");
     svg.classList.add("korb-svg");
 
-    // Halbrunder Korb als Hintergrund
     const bogen = document.createElementNS(ns, "path");
     bogen.setAttribute("d", "M 70 120 A 130 78 0 0 1 330 120 Z");
     bogen.setAttribute("class", "korb-schale");
@@ -114,8 +91,7 @@ class Schreibmaschine {
 
     const ziel = { x: 200, y: 4 };
     for (let i = 0; i < HEBEL_ANZAHL; i++) {
-      // Drehpunkte liegen auf einem Bogen um die Mitte unten.
-      const winkel = Math.PI + (i + 0.5) / HEBEL_ANZAHL * Math.PI; // 180° bis 360°
+      const winkel = Math.PI + (i + 0.5) / HEBEL_ANZAHL * Math.PI; 
       const px = 200 + Math.cos(winkel) * 118;
       const py = 124 + Math.sin(winkel) * 100;
       const dx = ziel.x - px, dy = ziel.y - py;
@@ -135,7 +111,6 @@ class Schreibmaschine {
     this.korbFeld.appendChild(svg);
   }
 
-  // Eine Taste kurz drücken lassen und den passenden Hebel hochschlagen.
   anschlag(zeichen) {
     const t = this.zeichenZuTaste.get(zeichen);
     if (!t) return;
@@ -146,18 +121,14 @@ class Schreibmaschine {
         { duration: 110, easing: "ease-out" }
       );
     }
-    // Die Leertaste hat keinen Hebel, sie schiebt nur den Wagen weiter.
     if (t.leer || ruhig) return;
     const i = Math.max(0, Math.min(HEBEL_ANZAHL - 1, Math.round(t.anteil * (HEBEL_ANZAHL - 1))));
-    // Der Hebel ruht als kurzer Stummel (von vorne sieht man ihn verkürzt)
-    // und schnellt für einen Augenblick auf volle Länge bis zum Papier.
     this.hebel[i].animate(
       [{ transform: "scaleX(0.2)" }, { transform: "scaleX(1)", offset: 0.4 }, { transform: "scaleX(0.2)" }],
       { duration: 130, easing: "cubic-bezier(.2,.7,.3,1)" }
     );
   }
 
-  // Die nächste Taste hervorheben. Bei stehenden Fehlern die Rücktaste.
   markiere(zeichen, fehlerStehen) {
     for (const el of this.markiert) el.classList.remove("dran");
     this.markiert = [];
@@ -178,8 +149,6 @@ class Schreibmaschine {
     }
   }
 
-  // Fehler pro Taste einfärben: je mehr Fehler, desto knalliger das Rot.
-  // fehler ist { "e": 3, "E": 1, ... } (das Zeichen, das man treffen sollte).
   hitze(fehler) {
     this.hitzeWeg();
     const proTaste = new Map();
@@ -187,8 +156,6 @@ class Schreibmaschine {
       const t = this.zeichenZuTaste.get(zeichen);
       if (!t) continue;
       proTaste.set(t.el, (proTaste.get(t.el) || 0) + n);
-      // Ein Großbuchstabe verlangt auch Umschalt. Die bekommt nur einen
-      // Hauch Rot, denn der Fehler kann auch am Buchstaben liegen.
     }
     const max = Math.max(0, ...proTaste.values());
     for (const [el, n] of proTaste) {
