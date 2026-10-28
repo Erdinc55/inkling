@@ -1,15 +1,3 @@
-/*
-  sprache.js  -  alle Beschriftungen der Oberfläche
-
-  Warum eine eigene Datei?
-  So steht kein deutscher oder englischer Satz mitten im Code. Wer eine
-  dritte Sprache möchte (zum Beispiel Spanisch), kopiert den Block "en",
-  nennt ihn "es", übersetzt die Werte und legt eine texte-es.js an.
-  Der übrige Code muss dafür nicht geändert werden.
-
-  {name} in einem Text wird beim Anzeigen durch einen Wert ersetzt.
-*/
-
 const SPRACHEN = {
 
   de: {
@@ -155,9 +143,6 @@ const SPRACHEN = {
   }
 };
 
-// Text holen und Platzhalter wie {n} ersetzen.
-// Fehlt ein Text, wird der Schlüssel angezeigt statt einer leeren Stelle,
-// damit man den Fehler sofort sieht.
 function uebersetze(sprache, schluessel, werte) {
   const satz = (SPRACHEN[sprache] && SPRACHEN[sprache][schluessel]) ||
                (SPRACHEN.en[schluessel]) || schluessel;
