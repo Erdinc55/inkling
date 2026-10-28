@@ -1,5 +1,3 @@
-// Test für messung.js und die Textdateien. Start: node test-messung.js
-// Gehört nicht zur Seite, hilft nur beim Prüfen.
 const fs = require("fs");
 const vm = require("vm");
 const M = require("./messung.js");
@@ -41,7 +39,6 @@ gleich("42 WPM: fehlend bis Gold", f.fehlend, 8);
 wahr("Inkmaster hat keinen nächsten Rang", M.fortschritt(130).naechster === null);
 
 console.log("--- Verlauf ---");
-// 10 Sekunden lang genau 5 richtige Anschläge pro Sekunde = 60 WPM
 const a = [];
 for (let i = 1; i <= 50; i++) a.push({ t: i * 200, richtig: true });
 const v = M.verlauf(a, 10, 5);
