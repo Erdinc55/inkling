@@ -1,41 +1,19 @@
-/*
-  spiel.js
-  --------
-  Ein "Lauf" ist ein einzelner Versuch: vom ersten Anschlag bis die Zeit
-  um ist (Zeitlauf) oder die Tinte leer ist (Überleben).
-
-  Auch diese Datei weiß nichts von der Seite. Sie bekommt Zeichen und
-  Zeitpunkte und antwortet, was passiert ist (richtig, falsch, Zeilenende).
-  app.js entscheidet dann, wie das aussieht und klingt.
-  Dadurch kann man das Spiel ohne Browser testen und durchrechnen.
-*/
-
-// Startwerte für Überleben. Hier dreht man, wenn es zu leicht oder zu
-// schwer ist. Siehe test-spiel.js, dort wird ein Tipper simuliert.
 const UEBERLEBEN = {
-  maxTinte: 12,          // Sekunden, bis der volle Balken leer ist
-  proBuchstabe: 0.45,    // Sekunden Tinte pro Buchstabe eines richtigen Worts
-  fehlerKosten: 1,       // Sekunden Abzug pro Fehler
+  maxTinte: 12,        
+  proBuchstabe: 0.45,   
+  fehlerKosten: 1,       
   woerterProLevel: 10,
-  schnellerProLevel: 0.12 // Level 2 leert 12 % schneller als Level 1 usw.
+  schnellerProLevel: 0.12 
 };
 
-// Wie viele falsche Zeichen man "übertippen" kann, bevor es hakt.
-// Wie bei einer echten Maschine: Falsches steht da, bis man es wegnimmt.
 const MAX_FALSCH = 6;
 
-// Satzzeichen, die bei "Satzzeichen aus" verschwinden.
 const SATZZEICHEN = /[.,;:!?'"()\-]/g;
 
 function ohneSatzzeichen(text) {
   return text.replace(SATZZEICHEN, "").replace(/\s+/g, " ").trim();
 }
 
-/*
-  Textquelle: liefert Zeile für Zeile.
-  Sie merkt sich die letzten Zeilen, damit nicht zweimal hintereinander
-  dasselbe Sprichwort kommt.
-*/
 class Textquelle {
   constructor(texte, art, optionen) {
     this.texte = texte;
@@ -49,16 +27,12 @@ class Textquelle {
   wahl(liste) {
     return liste[Math.floor(this.zufall() * liste.length)];
   }
-
-  // Eine Zeile aus mehreren Wörtern bauen. "level" macht die Wörter im
-  // Überleben-Modus länger (Level 1: 3-6 Buchstaben, dann je +1).
-  woerterZeile(level) {
+woerterZeile(level) {
     let auswahl = this.texte.woerter;
     if (level) {
       const min = Math.min(3 + (level - 1), 9);
       const max = min + 4;
       const passend = auswahl.filter((w) => w.length >= min && w.length <= max);
-      // Zu wenige passende Wörter? Dann lieber alle nehmen als hängen.
       if (passend.length >= 15) auswahl = passend;
     }
     const woerter = [];
@@ -105,11 +79,6 @@ class Textquelle {
   }
 }
 
-/*
-  Ein Lauf.
-  modus: "zeit" oder "ueberleben"
-  dauer: Sekunden (nur Zeitlauf)
-*/
 class Lauf {
   constructor(einstellung) {
     this.modus = einstellung.modus;
@@ -120,18 +89,18 @@ class Lauf {
       einstellung
     );
 
-    this.fertigeZeilen = [];    // schon getippte Zeilen
+    this.fertigeZeilen = [];   
     this.level = 1;
     this.zeile = this.quelle.naechste(this.modus === "ueberleben" ? 1 : 0);
     this.vorschau = this.quelle.naechste(this.modus === "ueberleben" ? 1 : 0);
-    this.pos = 0;               // so viele Zeichen der Zeile sind richtig
-    this.falsch = [];           // falsch getippte Zeichen, die noch dastehen
+    this.pos = 0;               
+    this.falsch = [];        
     this.wortStart = 0;
 
     this.richtige = 0;
     this.alle = 0;
-    this.anschlaege = [];       // { t, richtig } für das Diagramm
-    this.tastenFehler = {};     // erwartetes Zeichen -> Anzahl Fehler
+    this.anschlaege = [];       
+    this.tastenFehler = {};     
 
     this.startZeit = null;
     this.letzterTick = null;
@@ -139,7 +108,6 @@ class Lauf {
     this.beendet = false;
     this.grund = null;
 
-    // Überleben
     this.tinte = UEBERLEBEN.maxTinte;
     this.woerter = 0;
   }
@@ -150,7 +118,6 @@ class Lauf {
     return this.zeile.text[this.pos];
   }
 
-  // Wie viele Sekunden zählen für die Rechnung?
   sekunden(jetzt) {
     if (!this.gestartet) return 0;
     const ende = this.endZeit !== null ? this.endZeit : jetzt;
@@ -163,24 +130,17 @@ class Lauf {
     if (!this.gestartet) return this.dauer;
     return Math.max(0, this.dauer - this.sekunden(jetzt));
   }
-
-  // Wie schnell die Tinte im aktuellen Level verschwindet (Sekunden pro Sekunde).
   tintenVerbrauch() {
     return 1 + UEBERLEBEN.schnellerProLevel * (this.level - 1);
   }
 
-  /*
-    Ein Zeichen wurde getippt.
-    Rückgabe: { typ: "richtig" | "falsch" | "ignoriert", zeilenEnde, wortFertig, levelAuf, erwartet }
-  */
+
   tippe(zeichen, jetzt) {
     if (this.beendet) return { typ: "ignoriert" };
     if (!this.gestartet) {
       this.startZeit = jetzt;
       this.letzterTick = jetzt;
     }
-    // Vor dem Verbuchen kurz die Zeit nachziehen, damit eine abgelaufene
-    // Uhr nicht noch einen Anschlag durchlässt.
     this.aktualisieren(jetzt);
     if (this.beendet) return { typ: "ignoriert" };
 
@@ -188,15 +148,11 @@ class Lauf {
     const t = jetzt - this.startZeit;
     this.alle++;
 
-    // Es steht schon etwas Falsches da: jeder weitere Anschlag ist auch falsch,
-    // bis man mit der Rücktaste aufräumt.
     if (this.falsch.length > 0 || zeichen !== erwartet) {
       const platz = this.zeile.text.length - this.pos;
       if (this.falsch.length < Math.min(MAX_FALSCH, platz)) this.falsch.push(zeichen);
       this.anschlaege.push({ t, richtig: false });
       this.tastenFehler[erwartet] = (this.tastenFehler[erwartet] || 0) + 1;
-      // Nur der erste Fehler einer Reihe kostet Tinte, sonst wäre man nach
-      // einem Vertipper mit drei Folgefehlern sofort tot.
       if (this.modus === "ueberleben" && this.falsch.length === 1) {
         this.tinte = Math.max(0, this.tinte - UEBERLEBEN.fehlerKosten);
         if (this.tinte <= 0) this.beenden("tinte", jetzt);
@@ -204,7 +160,6 @@ class Lauf {
       return { typ: "falsch", erwartet };
     }
 
-    // Richtig
     this.richtige++;
     this.pos++;
     this.anschlaege.push({ t, richtig: true });
@@ -240,16 +195,12 @@ class Lauf {
     return ergebnis;
   }
 
-  // Rücktaste: nimmt nur Falsches weg. Richtig Getipptes steht wie auf
-  // Papier, das kann man nicht mehr ändern.
   loeschen() {
     if (this.beendet || this.falsch.length === 0) return false;
     this.falsch.pop();
     return true;
   }
 
-  // Wird regelmäßig aufgerufen (ca. 60-mal pro Sekunde).
-  // Gibt true zurück, wenn der Lauf gerade zu Ende gegangen ist.
   aktualisieren(jetzt) {
     if (this.beendet || !this.gestartet) return false;
     if (this.modus === "zeit") {
@@ -276,7 +227,6 @@ class Lauf {
     this.endZeit = wann;
   }
 
-  // Alle Zahlen auf einmal, für Anzeige und Speicher.
   werte(jetzt) {
     const s = this.sekunden(jetzt);
     return {
@@ -291,7 +241,6 @@ class Lauf {
     };
   }
 
-  // Alle Zitate, die in diesem Lauf (auch angefangen) vorkamen.
   zitate() {
     const alle = this.fertigeZeilen.concat(this.pos > 0 ? [this.zeile] : []);
     return alle.filter((z) => z.autor);
