@@ -1,12 +1,3 @@
-/*
-  style.css  -  das Aussehen von Inkling
-
-  Die Idee: eine helle Reiseschreibmaschine aus den Fünfzigern.
-  Mintgrüner Lack, schwarze runde Tasten mit Chromring, cremefarbenes
-  Papier, blauschwarze Tinte und ein rotes Farbband für Fehler.
-  Alle Farben stehen hier oben, damit man sie an einer Stelle ändern kann.
-*/
-
 :root {
   --tisch: #ece5d6;
   --tisch-dunkel: #d9cfbb;
@@ -31,9 +22,6 @@
   --font-stempel: "Special Elite", "Courier New", monospace;
   --font-ui: "Karla", system-ui, sans-serif;
 
-  /* Wo auf dem Papier angeschlagen wird (von links). Am Computer in der
-     Mitte wie bei der echten Maschine, auf dem Handy weiter links, damit
-     man mehr vom kommenden Text sieht. */
   --anschlag: 50%;
   --schriftgroesse: 26px;
   --zeilenhoehe: 1.75em;
@@ -47,7 +35,6 @@ body {
   margin: 0;
   min-height: 100vh;
   background-color: var(--tisch);
-  /* Leichte Holz-/Leinenstruktur aus zwei Verläufen, ohne Bilddatei */
   background-image:
     radial-gradient(ellipse at 50% -10%, rgba(255, 255, 255, 0.7), transparent 60%),
     repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.012) 0 2px, transparent 2px 5px);
@@ -72,7 +59,6 @@ button, select, input { font: inherit; color: inherit; }
   outline-offset: 2px;
 }
 
-/* ---------------- Kopf ---------------- */
 
 .kopf {
   max-width: 1000px;
@@ -98,7 +84,6 @@ button, select, input { font: inherit; color: inherit; }
   gap: 10px;
 }
 
-/* Ein Tintenklecks vor dem Namen, aus zwei Kreisen und einem Tropfen */
 .logo-klecks {
   width: 26px;
   height: 26px;
@@ -147,7 +132,6 @@ button, select, input { font: inherit; color: inherit; }
   color: var(--schrift-leise);
 }
 
-/* Segment-Schalter: sehen aus wie eine Reihe Metall-Tabulatoren */
 .schalter {
   display: inline-flex;
   background: linear-gradient(var(--stahl), var(--stahl-hell));
@@ -178,7 +162,6 @@ button, select, input { font: inherit; color: inherit; }
 }
 .schalter button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* Kippschalter für an/aus */
 .kipp {
   min-height: 44px;
   display: inline-flex;
@@ -217,7 +200,6 @@ button, select, input { font: inherit; color: inherit; }
 .kipp[aria-pressed="true"] .kipp-hebel::after { transform: translateX(16px); }
 .kipp-text { min-width: 2.2em; text-align: left; }
 
-/* ---------------- Rang-Leiste ---------------- */
 
 .rang-leiste {
   max-width: 1000px;
@@ -252,7 +234,6 @@ button, select, input { font: inherit; color: inherit; }
   transition: width 0.8s cubic-bezier(.2,.8,.2,1);
 }
 
-/* ---------------- Stempel (Ränge) ---------------- */
 
 .stempel {
   --rang-farbe: #5b6168;
@@ -269,7 +250,6 @@ button, select, input { font: inherit; color: inherit; }
   text-align: center;
   font-family: var(--font-stempel);
   transform: rotate(-9deg);
-  /* Stempelfarbe ist nie ganz gleichmäßig: leichte Unregelmäßigkeit per Maske */
   -webkit-mask-image: radial-gradient(circle at 30% 70%, rgba(0,0,0,0.75), #000 40%), radial-gradient(circle at 80% 20%, rgba(0,0,0,0.85), #000 50%);
   mask-image: radial-gradient(circle at 30% 70%, rgba(0,0,0,0.75), #000 40%), radial-gradient(circle at 80% 20%, rgba(0,0,0,0.85), #000 50%);
   mix-blend-mode: multiply;
@@ -288,15 +268,13 @@ button, select, input { font: inherit; color: inherit; }
 .stempel.gross .s-fuss { font-size: 11px; }
 .stempel.leer { --rang-farbe: #b8b1a1; border-style: dashed; box-shadow: none; }
 
-.rang-0 { --rang-farbe: #5b6168; }   /* Iron */
-.rang-1 { --rang-farbe: #a3602b; }   /* Bronze */
-.rang-2 { --rang-farbe: #7d8a94; }   /* Silver */
-.rang-3 { --rang-farbe: #b08617; }   /* Gold */
-.rang-4 { --rang-farbe: #2f8a83; }   /* Platinum */
-.rang-5 { --rang-farbe: #3563b0; }   /* Diamond */
-.rang-6 { --rang-farbe: #c9372c; }   /* Inkmaster */
-
-/* ---------------- Steuerung ---------------- */
+.rang-0 { --rang-farbe: #5b6168; } 
+.rang-1 { --rang-farbe: #a3602b; }  
+.rang-2 { --rang-farbe: #7d8a94; }  
+.rang-3 { --rang-farbe: #b08617; }   
+.rang-4 { --rang-farbe: #2f8a83; }   
+.rang-5 { --rang-farbe: #3563b0; } 
+.rang-6 { --rang-farbe: #c9372c; }   
 
 .steuerung {
   max-width: 1000px;
@@ -336,14 +314,12 @@ kbd {
   background: var(--tisch);
 }
 
-/* Während des Tippens tritt die Steuerung zurück */
 body.laeuft .steuerung,
 body.laeuft .einstellungen,
 body.laeuft .rang-leiste { opacity: 0.35; transition: opacity 0.3s; }
 body.laeuft .steuerung:hover,
 body.laeuft .einstellungen:hover { opacity: 1; }
 
-/* ---------------- Die Maschine ---------------- */
 
 .maschine {
   max-width: 1000px;
@@ -361,7 +337,6 @@ body.laeuft .einstellungen:hover { opacity: 1; }
     0 4px 0 var(--lack-tief);
 }
 
-/* Zählwerk */
 .zaehlwerk {
   display: flex;
   justify-content: center;
@@ -397,7 +372,6 @@ body.laeuft .einstellungen:hover { opacity: 1; }
 }
 .zaehler-name b { color: var(--papier); }
 
-/* Tintenfass für Überleben: ein Balken, der leer läuft */
 .tinten-zaehler { min-width: 240px; justify-content: center; gap: 6px; }
 .tintenfass {
   width: 100%;
@@ -418,7 +392,6 @@ body.laeuft .einstellungen:hover { opacity: 1; }
 }
 .tintenfass.knapp span { background: linear-gradient(90deg, var(--rot), var(--rot-hell)); }
 
-/* Papierbereich: oben schaut der Bogen heraus, unten liegt die Walze */
 .papier-bereich { position: relative; }
 
 .papier-fenster {
@@ -427,25 +400,18 @@ body.laeuft .einstellungen:hover { opacity: 1; }
   overflow: hidden;
   font-family: var(--font-papier);
   font-size: var(--schriftgroesse);
-  /* Der Bogen verblasst nach oben, als liefe er hinter die Papierstütze */
   -webkit-mask-image: linear-gradient(transparent, #000 38%);
   mask-image: linear-gradient(transparent, #000 38%);
   cursor: text;
 }
 
-/* Der Bogen fährt: --spalte schiebt ihn nach links.
-   1ch ist genau die Breite eines Zeichens, weil die Schrift gleich breite
-   Zeichen hat. So steht das nächste Zeichen immer an der Anschlagstelle. */
 .bogen {
   --spalte: 0;
   --rand: 4ch;
   position: absolute;
   left: var(--anschlag);
-  /* Unten verschwindet der Bogen hinter der Walze. Neue Zeilen kommen
-     unten dazu und schieben die alten nach oben, wie beim Zeilenvorschub. */
   bottom: -3em;
   min-width: 46ch;
-  /* Der Bogen reicht immer bis über den oberen Rand: ein ganzes Blatt */
   min-height: calc(100% + 3em);
   padding: 0.4em var(--rand) 3.35em;
   display: flex;
@@ -461,7 +427,6 @@ body.laeuft .einstellungen:hover { opacity: 1; }
   transition: transform 70ms ease-out;
   will-change: transform;
 }
-/* Wagenrücklauf: langsamer zurück nach rechts */
 .bogen.ruecklauf { transition: transform 320ms cubic-bezier(.3,.7,.2,1); }
 
 .zeile { height: var(--zeilenhoehe); }
@@ -470,7 +435,6 @@ body.laeuft .einstellungen:hover { opacity: 1; }
 .zeichen.offen { color: var(--bleistift); }
 .zeichen.gedruckt {
   color: var(--tinte);
-  /* Tinte ist nie ganz scharf */
   text-shadow: 0 0 0.6px rgba(28, 39, 64, 0.65);
 }
 .zeichen.falsch {
@@ -506,7 +470,6 @@ body.laeuft .einstellungen:hover { opacity: 1; }
 }
 .zeile.fertig .autor { color: #8d8676; }
 
-/* Anschlagmarke: kleine Chromführung, wo der Hebel trifft */
 .anschlag-marke {
   position: absolute;
   left: var(--anschlag);
@@ -532,8 +495,6 @@ body.laeuft .einstellungen:hover { opacity: 1; }
   border-top: 0;
 }
 
-/* Verstecktes Eingabefeld: liegt unsichtbar über dem Papier.
-   16px Schrift, sonst zoomt das iPhone beim Antippen hinein. */
 .eingabe {
   position: absolute;
   inset: 0;
@@ -549,7 +510,6 @@ body.laeuft .einstellungen:hover { opacity: 1; }
 }
 body.handy .eingabe { pointer-events: auto; }
 
-/* Walze: schwarzer Gummizylinder mit Chromknöpfen */
 .walze {
   position: relative;
   height: 26px;
@@ -583,7 +543,6 @@ body.handy .eingabe { pointer-events: auto; }
 body.laeuft .start-hinweis { opacity: 0; }
 body.ergebnis-offen .start-hinweis { display: none; }
 
-/* Typenkorb: liegt unter der Walze, die Hebel schlagen nach oben durch */
 .korb {
   position: relative;
   height: 76px;
@@ -591,8 +550,6 @@ body.ergebnis-offen .start-hinweis { display: none; }
   pointer-events: none;
   z-index: 3;
 }
-/* Das SVG ragt nach oben über die Walze, damit die Hebelspitze genau
-   die Zeile auf dem Papier trifft. */
 .korb-svg {
   position: absolute;
   left: 50%;
@@ -610,7 +567,6 @@ body.ergebnis-offen .start-hinweis { display: none; }
   transform: scaleX(0.2);
 }
 
-/* Tastatur */
 .tasten {
   display: flex;
   flex-direction: column;
@@ -641,7 +597,6 @@ body.ergebnis-offen .start-hinweis { display: none; }
   color: var(--papier);
   font-family: var(--font-papier);
   font-weight: 700;
-  /* Zwei Hintergründe: innen die schwarze Kappe, außen der Chromring */
   background:
     radial-gradient(circle at 50% 42%, #3a3e44 0, var(--taste) 58%, #111 66%, transparent 67%),
     conic-gradient(from 200deg, var(--stahl-hell), var(--stahl-dunkel), var(--stahl-hell), var(--stahl), var(--stahl-hell));
@@ -665,7 +620,6 @@ body.ergebnis-offen .start-hinweis { display: none; }
 }
 .reihe-leer { margin-top: 2px; }
 
-/* Die nächste Taste: ein heller Ring, wie frisch geputzt */
 .taste.dran {
   box-shadow: 0 0 0 3px var(--papier), 0 0 0 6px var(--tinte), 0 4px 0 rgba(30, 40, 35, 0.45), 0 8px 14px rgba(0, 0, 0, 0.3);
 }
@@ -674,8 +628,6 @@ body.ergebnis-offen .start-hinweis { display: none; }
 }
 .taste.ruecktaste.dran { box-shadow: inset 0 0 0 3px var(--stahl), 0 0 0 3px var(--papier), 0 0 0 6px var(--rot); }
 
-/* Fehlertasten nach dem Lauf: je mehr Fehler, desto knalliger.
-   --hitze geht von 0 bis 1 und mischt Rot in die schwarze Kappe. */
 .taste.heiss {
   background:
     radial-gradient(circle at 50% 42%,
@@ -695,7 +647,6 @@ body.ergebnis-offen .start-hinweis { display: none; }
   color: var(--lack-tief);
 }
 
-/* ---------------- Ergebnis ---------------- */
 
 .ergebnis[hidden] { display: none; }
 .ergebnis {
@@ -765,7 +716,6 @@ body.ergebnis-offen .korb { display: none; }
 
 .e-stempel-platz { flex: none; }
 
-/* Stempel-Animation beim Aufstieg: die Maschine drückt das Zeichen aufs Papier */
 .stempel.aufprall {
   animation: aufprall 0.7s cubic-bezier(.3,1.6,.5,1) both;
 }
@@ -784,7 +734,6 @@ body.ergebnis-offen .korb { display: none; }
   animation: herausziehen 0.5s 0.5s both;
 }
 
-/* ---------------- Bestenliste ---------------- */
 
 .liste {
   width: min(560px, calc(100vw - 32px));
@@ -829,7 +778,6 @@ body.ergebnis-offen .korb { display: none; }
 .tabelle tr.neu td { background: rgba(201, 55, 44, 0.08); }
 .leer-hinweis { color: var(--schrift-leise); font-style: italic; }
 
-/* ---------------- Meldung ---------------- */
 
 .meldung {
   position: fixed;
@@ -849,7 +797,6 @@ body.ergebnis-offen .korb { display: none; }
 }
 .meldung.zeigen { opacity: 1; transform: translate(-50%, 0); }
 
-/* ---------------- Kleinere Bildschirme ---------------- */
 
 @media (max-width: 860px) {
   .taste { --groesse: 42px; }
@@ -860,7 +807,6 @@ body.ergebnis-offen .korb { display: none; }
   .korb-svg { width: 360px; }
 }
 
-/* Handy: keine gezeichnete Tastatur, die Bildschirmtastatur ist die Eingabe */
 body.handy .korb,
 body.handy .tasten,
 body.handy .tasten-hinweis { display: none; }
@@ -898,8 +844,6 @@ body.handy .tasten-hinweis { display: none; }
   .rang-leiste { gap: 12px; }
 }
 
-/* Wenn auf dem Handy die Tastatur offen ist und getippt wird: alles weg,
-   was Platz frisst, damit Zählwerk und Papier oben sichtbar bleiben. */
 body.handy.laeuft .kopf,
 body.handy.laeuft .rang-leiste,
 body.handy.laeuft .steuerung { display: none; }
