@@ -1,27 +1,6 @@
-/*
-  app.js
-  ------
-  Verbindet alles: Tastendrücke -> Lauf (spiel.js) -> Papier, Zählwerk,
-  Schreibmaschine (tastatur.js), Ton (ton.js), Ergebnis und Bestenliste.
-
-  Aufbau dieser Datei, von oben nach unten:
-   1. Speicher (Einstellungen, Bestenliste, Rang)
-   2. Elemente und Hilfsfunktionen
-   3. Das Papier zeichnen
-   4. Tippen am Computer und auf dem Handy
-   5. Uhr / Tinte (Schleife)
-   6. Ende eines Laufs, Ergebnis, Diagramm
-   7. Rang-Leiste und Bestenliste
-   8. Einstellungen und Start
-*/
-
 (function () {
   "use strict";
 
-  /* ============ 1. Speicher ============ */
-
-  // Alles liegt unter einem einzigen Schlüssel. Das "v1" erlaubt später
-  // einen Umbau, ohne dass alte Daten die Seite durcheinanderbringen.
   const SCHLUESSEL = "inkling.v1";
 
   const Speicher = {
@@ -32,8 +11,6 @@
         const daten = roh ? JSON.parse(roh) : {};
         return daten && typeof daten === "object" ? daten : {};
       } catch (e) {
-        // Gesperrter Speicher (privates Fenster, Datenschutz-Einstellung)
-        // oder kaputte Daten: Wir machen einfach ohne weiter.
         this.ok = false;
         return {};
       }
@@ -55,7 +32,6 @@
 
   const gespeichert = Speicher.lesen();
   const einst = Object.assign({}, STANDARD, gespeichert.einstellungen || {});
-  // Gespeicherte Werte prüfen, falls jemand von Hand daran gedreht hat.
   if (!SPRACHEN[einst.sprache]) einst.sprache = STANDARD.sprache;
   if (!BELEGUNGEN[einst.belegung]) einst.belegung = STANDARD.belegung;
   if (![30, 60, 120].includes(einst.dauer)) einst.dauer = STANDARD.dauer;
@@ -71,7 +47,6 @@
     Speicher.schreiben({ einstellungen: einst, bestenliste, besteRangWpm, letzteWertung });
   }
 
-  /* ============ 2. Elemente und Hilfen ============ */
 
   const $ = (id) => document.getElementById(id);
   const bogen = $("bogen");
@@ -80,8 +55,6 @@
   const ergebnisEl = $("ergebnis");
   const liste = $("liste");
 
-  // Handy = grober Finger als einziger Zeiger. Ein Laptop mit Touchscreen
-  // hat zusätzlich eine Maus und zählt deshalb als Computer.
   const istHandy = window.matchMedia("(pointer: coarse)").matches &&
                    !window.matchMedia("(any-pointer: fine)").matches;
   const geraet = istHandy ? "handy" : "computer";
@@ -97,7 +70,6 @@
     });
   }
 
-  // Text sicher ins HTML setzen (keine Tags aus Texten ausführen).
   function sicher(text) {
     return String(text).replace(/[&<>"']/g, (z) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[z]));
   }
@@ -113,14 +85,13 @@
 
   const ruhig = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ============ 3. Das Papier ============ */
 
   const maschine = new Schreibmaschine($("tasten"), $("korb"));
   maschine.bauen(einst.belegung);
 
   let lauf = null;
-  let zeileEl = null;       // die Zeile, die gerade getippt wird
-  let zeichenEls = [];      // ein <span> pro Zeichen dieser Zeile
+  let zeileEl = null;    
+  let zeichenEls = [];    
   let ergebnisOffen = false;
 
   function zeileAnlegen() {
@@ -148,8 +119,6 @@
     return a;
   }
 
-  // Nur die Zeichen rund um die Schreibstelle neu setzen. Bei jedem Anschlag
-  // die ganze Zeile neu aufzubauen wäre bei 10 Anschlägen pro Sekunde unnötig.
   function zeichnen() {
     const text = lauf.zeile.text;
     const pos = lauf.pos;
@@ -173,18 +142,15 @@
       if (s.className !== klasse) s.className = klasse;
       if (s.textContent !== inhalt) s.textContent = inhalt;
     }
-    // Den Wagen verschieben, damit die Schreibstelle unter der Marke steht.
     bogen.style.setProperty("--spalte", stelle);
   }
 
-  // Zeile fertig: Glocke, Wagenrücklauf, Zeilenvorschub.
   function zeilenWechsel() {
     const fertig = lauf.fertigeZeilen[lauf.fertigeZeilen.length - 1];
     zeileEl.className = "zeile fertig";
     zeileEl.textContent = fertig.text;
     if (fertig.autor) zeileEl.appendChild(autorEl(fertig.autor));
 
-    // Alte Zeilen weit oben sieht man nicht mehr, sie können weg.
     const alle = bogen.querySelectorAll(".zeile");
     for (let i = 0; i < alle.length - 6; i++) alle[i].remove();
 
@@ -203,8 +169,6 @@
     maschine.markiere(lauf.erwartet(), lauf.falsch.length > 0);
   }
 
-  /* ============ 4. Tippen ============ */
-
   function neuerLauf() {
     ergebnisSchliessen();
     stoppeSchleife();
@@ -214,7 +178,6 @@
       art: einst.art,
       texte: texteFuer(einst.sprache),
       satzzeichen: einst.satzzeichen,
-      // Auf dem Handy kürzere Wortzeilen, damit man das Zeilenende sieht.
       zeilenLaenge: istHandy ? 30 : 44
     });
     bogen.innerHTML = "";
@@ -250,7 +213,6 @@
       zeichnen();
     }
     markieren();
-    // Im Überleben kann ein Fehler die letzte Tinte kosten.
     if (lauf.beendet) laufEnde();
   }
 
@@ -269,9 +231,8 @@
     neuerLauf();
   }
 
-  // --- Computer: echte Tastatur ---
   document.addEventListener("keydown", (e) => {
-    if (liste.open) return;               // Bestenliste offen: normal bedienen
+    if (liste.open) return;          
     if (istHandy && e.target === eingabe) { handyTaste(e); return; }
 
     if (e.key === "Tab") {
@@ -284,10 +245,8 @@
       abbrechen();
       return;
     }
-    if (ergebnisOffen) return;            // Enter/Leertaste bedienen dann die Knöpfe
+    if (ergebnisOffen) return;         
 
-    // Strg/Cmd-Kombinationen (Kopieren, Neu laden ...) gehören dem Browser.
-    // Achtung: AltGr meldet sich unter Windows als Strg+Alt, das lassen wir durch.
     if ((e.ctrlKey && !e.altKey) || e.metaKey) return;
 
     if (e.key === "Backspace") {
@@ -295,36 +254,26 @@
       loeschen();
       return;
     }
-    // Totentaste (^, ´, `): Das eigentliche Zeichen kommt mit dem nächsten Tastendruck.
     if (e.key === "Dead") return;
-    // Gedrückt gehaltene Taste: nicht 30 Mal zählen.
     if (e.repeat) { if (e.key.length === 1) e.preventDefault(); return; }
 
     if (e.key.length === 1) {
-      // Kein Scrollen bei Leertaste, keine Schnellsuche bei ' und /.
       e.preventDefault();
       if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
       tippen(e.key);
     }
   });
-
-  // --- Handy: Bildschirmtastatur über ein verstecktes Eingabefeld ---
-  // Viele Handy-Tastaturen melden bei keydown nur "Unidentified". Verlässlich
-  // ist nur das input-Ereignis: Wir vergleichen den Inhalt vorher und nachher.
-  // Ein Platzhalterzeichen vorne sorgt dafür, dass auch die Rücktaste bei
-  // "leerem" Feld etwas löscht und damit bemerkt wird.
   const PLATZHALTER = "_";
   let vorher = PLATZHALTER;
 
   function eingabeLeeren() {
     eingabe.value = PLATZHALTER;
     vorher = PLATZHALTER;
-    try { eingabe.setSelectionRange(1, 1); } catch (e) { /* manche Felder erlauben das nicht */ }
+    try { eingabe.setSelectionRange(1, 1); } catch (e) { }
   }
 
   function handyTaste(e) {
     if (e.key === "Enter") { e.preventDefault(); if (ergebnisOffen) neuerLauf(); return; }
-    // Rücktaste bei leerem Feld ändert den Inhalt nicht, also hier abfangen.
     if (e.key === "Backspace" && eingabe.value.length <= PLATZHALTER.length) {
       e.preventDefault();
       loeschen();
@@ -334,19 +283,15 @@
   eingabe.addEventListener("input", (e) => {
     const neu = eingabe.value;
     if (!neu.startsWith(PLATZHALTER)) {
-      // Platzhalter wurde mitgelöscht: das war eine Rücktaste.
       loeschen();
       eingabeLeeren();
       return;
     }
-    // Gemeinsamen Anfang finden, Rest ist gelöscht bzw. neu.
     let k = 0;
     while (k < vorher.length && k < neu.length && vorher[k] === neu[k]) k++;
     for (let i = 0; i < vorher.length - k; i++) loeschen();
     for (const z of neu.slice(k)) tippen(z);
     vorher = neu;
-    // Nach einem Leerzeichen (Wortende) das Feld leeren. Nicht mitten im
-    // Wort, denn dort setzt die Handy-Tastatur gerade noch ein Wort zusammen.
     if (!e.isComposing && (neu.endsWith(" ") || neu.length > 40)) eingabeLeeren();
   });
 
@@ -355,8 +300,6 @@
     setTimeout(papierZeigen, 300);
   });
 
-  // Die Bildschirmtastatur verdeckt die untere Hälfte. visualViewport sagt,
-  // wie viel noch sichtbar ist. Dann schieben wir das Papier nach oben.
   function papierZeigen() {
     if (!istHandy || document.activeElement !== eingabe) return;
     const oben = $("maschine").getBoundingClientRect().top + window.scrollY - 8;
@@ -366,7 +309,6 @@
     window.visualViewport.addEventListener("resize", papierZeigen);
   }
 
-  // Kein Einfügen, kein Hineinziehen von Text.
   for (const art of ["paste", "drop"]) {
     document.addEventListener(art, (e) => {
       if (liste.open) return;
@@ -375,7 +317,6 @@
     });
   }
 
-  /* ============ 5. Uhr und Tinte ============ */
 
   let schleife = null;
   let letzteAnzeige = 0;
@@ -413,11 +354,9 @@
       setze("wert-level", String(lauf.level));
       setze("wert-woerter", String(lauf.woerter));
     }
-    // WPM und Genauigkeit viermal pro Sekunde reichen, sonst flackert es.
     if (jetzt - letzteAnzeige > 250) {
       letzteAnzeige = jetzt;
       const w = lauf.werte(jetzt);
-      // In den ersten zwei Sekunden ist die WPM-Zahl noch Zufall.
       setze("wert-wpm", w.sekunden < 2 ? "-" : zahl(w.netto));
       setze("wert-gen", zahl(w.genauigkeit) + "%");
     }
@@ -448,7 +387,6 @@
     $("start-hinweis").textContent = text;
   }
 
-  /* ============ 6. Ende, Ergebnis, Diagramm ============ */
 
   function wertungsSchluessel(modus, dauer, ger, sprache) {
     return (modus === "zeit" ? "zeit" + dauer : "ueberleben") + "|" + ger + "|" + sprache;
@@ -468,7 +406,6 @@
     if (w.alle === 0) { neuerLauf(); return; }
     markieren();
 
-    // --- Bestenliste ---
     const schluessel = wertungsSchluessel(lauf.modus, lauf.dauer, geraet, einst.sprache);
     const eintraege = Array.isArray(bestenliste[schluessel]) ? bestenliste[schluessel] : [];
     const bisherBest = eintraege.length ? Object.assign({}, eintraege[0]) : null;
@@ -485,11 +422,10 @@
     eintraege.push(eintrag);
     sortieren(eintraege, lauf.modus);
     bestenliste[schluessel] = eintraege.slice(0, 10);
-    const platz = bestenliste[schluessel].indexOf(eintrag) + 1; // 0 = nicht drin
+    const platz = bestenliste[schluessel].indexOf(eintrag) + 1; 
     zuletztId = eintrag.id;
     letzteWertung = schluessel;
 
-    // --- Rang (nur Zeitlauf am Computer, nur ab 90 % Genauigkeit) ---
     let aufstieg = false;
     const zaehlt = lauf.modus === "zeit" && !istHandy && Messung.zaehltFuerRang(w.genauigkeit);
     if (zaehlt && (besteRangWpm === null || w.netto > besteRangWpm)) {
@@ -507,7 +443,6 @@
     document.body.classList.add("ergebnis-offen");
     const ueberleben = lauf.modus === "ueberleben";
 
-    // Stempel rechts oben
     let stempel = "";
     if (ueberleben) {
       stempel = `<div class="stempel gross rang-6${info.aufstieg ? " aufprall" : ""}" style="--rang-farbe: var(--tinte)">
@@ -519,12 +454,10 @@
       if (info.aufstieg) stempel += `<p class="aufstieg-text">${sicher(T("aufstieg"))}</p>`;
     }
 
-    // Die großen Zahlen
     const zahlen = ueberleben
       ? [["level", w.level, true], ["woerterGezaehlt", w.woerter], ["netto", zahl(w.netto)]]
       : [["netto", zahl(w.netto), true], ["brutto", zahl(w.brutto)], ["genauigkeit", zahl(w.genauigkeit, 1) + "%"]];
 
-    // Sätze unter den Zahlen
     const zeilen = [];
     zeilen.push(info.platz ? T("platz", { n: info.platz }) : T("keinPlatz"));
     if (!info.bisherBest) {
@@ -542,7 +475,6 @@
     if (!ueberleben && istHandy) zeilen.push(sicher(T("rangNurComputer")));
     if (!ueberleben && !istHandy && !info.zaehlt) zeilen.push(`<span class="schlecht">${sicher(T("zuUngenau"))}</span>`);
 
-    // Meistverfehlte Zeichen (hilft vor allem auf dem Handy, wo keine Tastatur zu sehen ist)
     const verfehlt = Object.entries(lauf.tastenFehler).sort((a, b) => b[1] - a[1]).slice(0, 6);
     const fehlerText = verfehlt.length
       ? T("fehlerTasten") + " " + verfehlt.map(([z, n]) => "[" + (z === " " ? "␣" : z) + "] " + n + "×").join("  ")
@@ -590,7 +522,6 @@
     document.body.classList.remove("ergebnis-offen");
   }
 
-  // Tempo über die Zeit als SVG. Keine Bibliothek: nur ein Pfad aus Punkten.
   function diagramm(sekunden) {
     const punkte = Messung.verlauf(lauf.anschlaege, sekunden, 5);
     const B = 640, H = 170, L = 34, U = 24, O = 8, R = 8;
@@ -614,7 +545,6 @@
       svg += `<polygon class="d-flaeche" points="${x(0)},${y(0)} ${linie.join(" ")} ${x(Math.min(punkte[punkte.length - 1].sek, maxS))},${y(0)}"/>`;
       svg += `<polyline class="d-linie" points="${linie.join(" ")}"/>`;
     }
-    // Rote Striche unten: hier hat man sich vertippt.
     for (const a of lauf.anschlaege) {
       if (a.richtig) continue;
       const xs = x(Math.min(a.t / 1000, maxS)).toFixed(1);
@@ -623,7 +553,6 @@
     return svg + "</svg>";
   }
 
-  /* ============ 7. Rang und Bestenliste ============ */
 
   function stempelHTML(index, klasse) {
     const r = Messung.RAENGE[index];
@@ -695,9 +624,8 @@
   for (const id of ["filter-modus", "filter-geraet", "filter-sprache"]) $(id).addEventListener("change", listeZeigen);
   $("liste-oeffnen").addEventListener("click", () => listeOeffnen(letzteWertung));
   $("liste-zu").addEventListener("click", () => liste.close());
-  liste.addEventListener("click", (e) => { if (e.target === liste) liste.close(); }); // Klick neben das Blatt
+  liste.addEventListener("click", (e) => { if (e.target === liste) liste.close(); });
 
-  /* ============ 8. Einstellungen und Start ============ */
 
   function beschriften() {
     document.documentElement.lang = einst.sprache;
@@ -725,9 +653,6 @@
     $("gruppe-art").title = ueberleben ? T("nurWoerter") : "";
   }
 
-  // Ein Klick auf eine Einstellung: Wert merken, Knöpfe abgleichen.
-  // Mit der Maus geklickte Knöpfe verlieren danach den Fokus, damit die
-  // nächste Leertaste ins Spiel geht und nicht den Knopf noch einmal drückt.
   function einstellung(attr, feld, umwandeln, danach) {
     for (const b of document.querySelectorAll("[" + attr + "]")) {
       b.addEventListener("click", (e) => {
@@ -758,18 +683,16 @@
     einst.ton = !einst.ton;
     Ton.an = einst.ton;
     speichern(); knoepfeAbgleichen(); beschriften();
-    if (einst.ton) Ton.klack();   // Der Klick ist die erlaubte erste Berührung.
+    if (einst.ton) Ton.klack();   
     if (e.detail > 0) e.currentTarget.blur();
   });
   $("neustart").addEventListener("click", (e) => { neuerLauf(); if (e.detail > 0) e.currentTarget.blur(); });
 
-  // Auf dem Computer: Klick aufs Papier holt den Fokus zurück ins Spiel.
   fenster.addEventListener("click", () => {
     if (istHandy) return;
     if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
   });
 
-  // Start
   Ton.an = einst.ton;
   knoepfeAbgleichen();
   beschriften();
@@ -777,7 +700,6 @@
   if (!Speicher.ok) meldung(T("speicherAus"));
 })();
 
-// Falls trotzdem etwas schiefgeht: eine Meldung statt einer stummen Seite.
 window.addEventListener("error", () => {
   const el = document.getElementById("meldung");
   if (!el) return;
