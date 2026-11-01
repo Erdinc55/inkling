@@ -13,7 +13,6 @@
 </head>
 <body>
 
-<!-- Wenn JavaScript fehlt oder abstürzt, steht hier wenigstens etwas. -->
 <noscript><p class="notfall">Inkling needs JavaScript. / Inkling braucht JavaScript.</p></noscript>
 
 <header class="kopf">
@@ -52,7 +51,6 @@
   </div>
 </header>
 
-<!-- Rang: Plakette und Fortschritt bis zum nächsten Rang -->
 <section class="rang-leiste" id="rang-leiste" aria-live="polite">
   <div class="stempel klein" id="rang-stempel"></div>
   <div class="rang-text">
@@ -62,7 +60,6 @@
   </div>
 </section>
 
-<!-- Modus, Dauer, Text -->
 <nav class="steuerung" aria-label="Settings">
   <div class="schalter-gruppe" role="group" aria-labelledby="l-modus">
     <span class="gruppen-name" id="l-modus" data-t="modus">Mode</span>
@@ -97,7 +94,6 @@
 
 <main class="maschine" id="maschine">
 
-  <!-- Zählwerk: läuft während des Tippens mit -->
   <div class="zaehlwerk">
     <div class="zaehler" id="zaehler-zeit">
       <span class="zaehler-wert" id="wert-zeit">60</span>
@@ -119,12 +115,10 @@
 
   <p class="start-hinweis" id="start-hinweis"></p>
 
-  <!-- Das Papier. Der Bogen fährt nach links, wie der Wagen einer echten Maschine. -->
   <div class="papier-bereich" id="papier-bereich">
     <div class="papier-fenster" id="fenster">
       <div class="bogen" id="bogen"></div>
       <div class="anschlag-marke" aria-hidden="true"></div>
-      <!-- Verstecktes Eingabefeld: auf dem Handy öffnet es die Bildschirmtastatur -->
       <input type="text" id="eingabe" class="eingabe"
              autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
              inputmode="text" enterkeyhint="next" aria-label="Typing field">
@@ -134,17 +128,14 @@
     </div>
   </div>
 
-  <!-- Ergebnis: erscheint nach dem Lauf an der Stelle des Papiers -->
   <section class="ergebnis" id="ergebnis" hidden aria-live="polite"></section>
 
-  <!-- Typenkorb und Tastatur (nur am Computer) -->
   <div class="korb" id="korb"></div>
   <div class="tasten" id="tasten"></div>
   <p class="tasten-hinweis" data-t="tastenHinweis">Tab = restart · Esc = cancel · Backspace removes mistakes</p>
 
 </main>
 
-<!-- Bestenliste -->
 <dialog class="liste" id="liste">
   <div class="liste-kopf">
     <h2 data-t="bestenliste">Leaderboard</h2>
@@ -161,10 +152,8 @@
   <div id="liste-inhalt"></div>
 </dialog>
 
-<!-- Kurze Meldungen, zum Beispiel "Einfügen ist nicht erlaubt" -->
 <div class="meldung" id="meldung" role="status" aria-live="polite"></div>
 
-<!-- Reihenfolge ist wichtig: erst die Bausteine, ganz zum Schluss app.js -->
 <script src="messung.js"></script>
 <script src="sprache.js"></script>
 <script src="texte-de.js"></script>
